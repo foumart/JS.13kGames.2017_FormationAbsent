@@ -1,0 +1,1974 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" />
+	<title>Formation Absent by FoumartGames js13k</title>
+	
+	<meta name="description" content="Formation Absent is turn-based puzzler made for js13k games competition 2017" />
+	<meta name="keywords" content="game, javascript, js, html5, puzzle, strategy, tactic" />
+	
+	<meta name="author" content="Noncho Savov" />
+	<meta name="copyright" content="Copyright © 2017 by Noncho Savov. All Rights Reserved." />
+	<meta name="application-name" content="Formation Absent" />
+	
+	<meta property="og:title" content="Formation Absent by FoumartGames" />
+	<meta property="og:type" content="article" />
+	<meta property="og:image" content="http://www.foumartgames.com/games/FormationAbsent/animated_preview.gif" />
+	<meta property="og:image:width" content="225" />
+	<meta property="og:image:height" content="225" />
+	<meta property="og:url" content="http://www.foumartgames.com/games/FormationAbsent/" />
+	<meta property="og:description" content="Formation Absent is turn-based puzzler made for js13k games competition 2017." />
+	
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Formation Absent by FoumartGames" />
+	<meta name="twitter:description" content="Formation Absent is turn-based puzzler made for js13k games competition 2017." />
+	<meta name="twitter:image" content="http://www.foumartgames.com/games/FormationAbsent/icon.png" />
+	
+	<style>
+		body {
+			margin: 0;
+			padding: 0;
+			overflow:hidden;
+			background-color:#000;
+		}
+		div, button {
+			position:absolute;
+			box-sizing:border-box;
+		}
+		.central{
+			top:0;
+			bottom:0;
+			left:0;
+			right:0;
+			margin:auto;
+			width:100%;
+			height:100%;
+		}
+		
+		#frame{
+			width:100%;
+			max-width:1920px;
+			min-width:960px;
+			height:100%;
+			max-height:1600px;
+			min-height:540px;
+		}
+		#container{
+			background-color:#161616;
+			border:solid 10px #1a1a1a;
+			left:0; right:0; top:0; bottom:0;
+			opacity:0;
+		}
+		.bgr{
+			background-image: url("data:image/gif;base64,R0lGODlhAgACAIABAERERP///yH5BAEAAAEALAAAAAACAAIAAAIDDBAFADs=");
+			background-size:20px 20px;
+			background-position:0 0;
+			image-rendering: pixelated;
+			image-rendering: -moz-crisp-edges;
+		}
+		
+		.greybtn{
+			background:linear-gradient(to bottom right, #aaa, #585858, #888);
+			border:solid 10px;
+			border-color:#777 #555 #444 #666;
+		}
+		.greybtn:hover{
+			background-color:#333;
+			border-color:#888 #666 #555 #777;
+		}
+		.greenbtn{
+			border-radius:6px;
+			background-color:#090;
+			border:solid 10px;
+			border-color:#2c2 #070 #060 #2b2;
+		}
+		.greenbtn:hover {
+			background-color:#00c300;
+			border-color:#0f0 #080 #070 #0d0;
+		}
+		.redbtn{
+			border-radius:6px;
+			background-color:#c33;
+			border:solid 10px;
+			border-color:#e66 #b32b2b #822 #d05050;
+		}
+		.redbtn:hover {
+			background-color: #e44;
+			border-color:#f88 #d33838 #a33 #f86060;
+		}
+		
+		#fade{
+			background-color:#000;
+			margin:0;
+		}
+		.mess{
+			visibility:hidden;
+			opacity:0;
+		}
+		.large{
+			left:4px;
+			width:920px;
+			border:solid 10px;
+			border-color:#666 #363636 #282828 #444;
+			background-color:#1b1b1b;
+		}
+		.custom{
+			background-color:#404040;
+			border:solid 10px #5b5b5b;
+			border-top-color: #444;
+			border-left-color: #444;
+			margin-top:0;
+			margin-left:0;
+		}
+		.custom:hover{
+			background-color:#4a4a4a;
+			border-bottom-color: #666;
+			border-right-color: #666;
+		}
+		#topscore{
+			border-radius: 16px;
+			top:0;
+		}
+		#bottomscore{
+			bottom:0;
+			border-radius: 28px;
+		}
+		.uiscore{
+			width:100%;
+			height:40px;
+			pointer-events:none;
+		}
+		.uiside{
+			top:4%;
+			height:90%;
+			width:25px;
+			pointer-events:none;
+		}
+		.greenscore{
+			background-color:#070;
+			border:solid 10px;
+			border-color:#0a0 #005f00 #004800 #080;
+		}
+		.greenscore:hover{
+			background-color:#080;
+			border-color:#0b0 #070 #005800 #090;
+		}
+		
+		:focus { outline:none;}
+		
+		button {
+			color: white;
+			cursor: pointer;
+		}
+		.menubtn{
+			right:-0.5%;
+			border-radius:0;
+			border-top-left-radius:28px;
+			border-bottom-left-radius:28px;
+		}
+		.boardbtn{
+			left:0;
+			border-radius:0;
+			border-radius:28px;
+		}
+		.closebtn{
+			top:-10px;
+			right:-5px;
+			cursor:pointer;
+			border-radius:28px;
+			transform:rotate(-90deg);
+		}
+		
+		.bluetitle{
+			background-color:#05b;
+			border:solid 10px;
+			border-color:#07e #048 #036 #06c;
+		}
+		.bluetitle:hover {
+			background-color: #06d;
+			border-color:#08f #059 #047 #08d;
+		}
+		
+		.diggit{
+			background-color:transparent;
+			pointer-events:none;
+			left: 0;
+			top: 0;
+			right: 0;
+			bottom: 0;
+			margin: auto;
+		}
+		.diggit-holder{
+			background-color:transparent;
+		}
+		.diggit-frame{
+			border:solid 0.8em;
+			border-color:#696 #353 #242 #575;
+			max-width:512px;
+			min-width:32px;
+			max-height:512px;
+			min-height:32px;
+			width:100%;
+			height:100%;
+		}
+		.diggit-frame:hover{
+			opacity:0.2;
+		}
+		.diggit-button{
+			cursor: pointer;
+			visibility:hidden;
+			width:100%;
+			height:100%;
+		}
+	</style>
+	
+	<script>
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+		ga('create', 'UA-41782328-9', 'auto');
+		ga('send', 'pageview');
+	</script>
+	
+</head>
+
+<body>
+	<div id="frame" class="central">
+		<div id="container">
+			<div id="bgr0" class="central bgr" style="background-color:#000;opacity:0;"></div>
+			<div id="plate" class="central mess"><div id="platebgr" class="central" style="background-color:#131313;opacity:0.5;"></div><div id="hilight"></div></div>
+			<div id="area" class="central mess"></div>
+			<div id="fade" class="central mess"></div>
+			<div id="mess" class="central mess large">
+				<div id="messtxt" class="central"></div>
+				<button class="greenscore" onClick="proceedClick();" style="bottom:6px; right:6px;"><div id="messbtn" style="position:relative;"></div></button>
+			</div>
+			
+			<div id="title" class="central">
+				<div id="logo" style="top:12%;left:50%;margin-left:-225px;"></div>
+				<div id="levelsbtns" class="central"></div>
+				<button class="greybtn boardbtn" onClick="soundChange()"><div id="soundbtn" style="position:relative; right:10px;"></div></button>
+				<button class="greenscore menubtn" onClick="messSelect(1)" style="bottom:36%"><div id="practicebtn" style="position:relative; left:28px;"></div></button>
+				<button class="bluetitle menubtn" onClick="messSelect(21)"><div id="versusbtn" style="position:relative; left:28px;"></div></button>
+				<button class="redbtn menubtn" onDblClick="messSelect(22)"><div id="multibtn" style="position:relative; left:28px;"></div></button>
+			</div>
+			
+		</div>
+		
+		<div id="topscore" class="uiscore bluetitle">
+			<div id="toptxt" class="central" style="position:relative;"></div>
+		</div>
+		
+		<div id="bottomscore" class="uiscore greenscore">
+			<div id="bottomtxt" class="central" style="position:relative;"></div>
+		</div>
+		
+		<div id="copy" style="left:18px;"></div>
+		<div id="author" style="right:18px;"></div>
+		
+		<button id="closediv" onClick="closeGame()" style="visibility:hidden;" class="redbtn closebtn"><div id="closebtn" class="button"></div></button>
+	</div>
+	
+	
+	
+	
+	<script type="text/javascript">
+		//"use strict";
+		
+		var online;
+		
+		var container = document.getElementById("container");
+		
+		var fade = document.getElementById("fade"),
+			topscore = document.getElementById("topscore"),
+			bottomscore = document.getElementById("bottomscore"),
+			topTxt = document.getElementById("toptxt"),
+			bottomTxt = document.getElementById("bottomtxt"),
+			messbtn = document.getElementById("messbtn"),
+			levelsbtns = document.getElementById("levelsbtns"),
+			logo = document.getElementById("logo");
+		
+		var containerWidth,
+			containerHeight,
+			width, height, x, y, i, j, w, h,
+			buttons, sound = -1, buttonWidth, buttonHeight, offset = 1, ratioY, ratioX;
+		
+		var PLR = "plr", OPP = "opp", ALLIES = "allies", FOES = "foes", left="left", up = "top", right = "right", bottom = "bottom";
+		
+		var score = 0, killed = 0, frags = 0;
+		var turn = ALLIES, turns = 0, tempturns, tempfrags, idle, animating;
+		var anim = 5, size = 6, gameState = 0, death = 0, lvl = -1, plrX, plrY, enmX, enmY, plrs, enms;
+		
+		var bblr = "borderBottomLeftRadius";
+		var bbrr = "borderBottomRightRadius";
+		var btlr = "borderTopLeftRadius";
+		var btrr = "borderTopRightRadius";
+		
+		window.addEventListener("load", init, false);
+		window.addEventListener("resize", onResize, false);
+		
+		var searchbar;
+		
+		var fox = navigator.userAgent.toLowerCase().indexOf("firefox") > -1;
+		
+		var ldata = [
+			"685005.155.01.105.14.02.150202",
+			"485.b5.1104050202005.02",
+			"596.82.4212005.4405.45",
+			"7a6.82.2505512.24002.2505",
+			"6a6.91.350202.15.02.1405.55.75",
+			"6a6.450022.15050002005040501.1505.55",
+			"8a6.250504.35.450050501.15050202.150502",
+			"7a6.6502.15050050105040502.1505.750002",
+			"7a65.82.355.4405012.52.35",
+			"8a6.d050505202050055.110450050200505.5505"
+		];
+		var levels = [];
+		var minturns = [];
+		var array = [];
+		var empty = [];
+		var completed;
+		var currentLevel;
+		
+		function updateURLParameter(url, param, paramVal){
+			var TheAnchor = null;
+			var newAdditionalURL = "";
+			var tempArray = url.split("?");
+			var baseURL = tempArray[0];
+			var additionalURL = tempArray[1];
+			var temp = "";
+			if (additionalURL){
+				var tmpAnchor = additionalURL.split("#");
+				var TheParams = tmpAnchor[0];
+					TheAnchor = tmpAnchor[1];
+				if(TheAnchor) additionalURL = TheParams;
+				tempArray = additionalURL.split("&");
+				for (i=0; i<tempArray.length; i++) {
+					if(tempArray[i].split("=")[0] != param) {
+						newAdditionalURL += temp + tempArray[i];
+						temp = "&";
+					}
+				}        
+			} else {
+				var tmpAnchor = baseURL.split("#");
+				var TheParams = tmpAnchor[0]; TheAnchor = tmpAnchor[1];
+				if(TheParams) baseURL = TheParams;
+			}
+			if(TheAnchor) paramVal += "#" + TheAnchor;
+			var rows_txt = temp + "" + param + "=" + paramVal;
+			return baseURL + "?" + newAdditionalURL + rows_txt;
+		}
+		
+		function getLevel(v){
+			var _l = [];
+			var _lvl = [];
+			for(var _y = 3 ; _y < v.length; _y++){
+				if(v.charAt(_y)=="."){
+					for(var _x = 0 ; _x < parseInt(v.charAt(_y+1), 16)+3; _x++){
+						_lvl.push(0);
+					}
+					_y++;
+				} else _lvl.push(parseInt(v.charAt(_y)));
+			}
+			for(_y = 0 ; _y < parseInt(v.charAt(2),16); _y++){
+				_l.push([]);
+				for(_x = 0 ; _x < parseInt(v.charAt(1),16); _x++){
+					_l[_y].push(_lvl[_y*parseInt(v.charAt(1),16)+_x]||0);
+				}
+			}
+			return _l;
+		}
+		
+		function updateTurns(){
+			var srch = location.search.substring(1);
+			var ll = -1;
+			srch.replace(/([^=&]+)=([^&]*)/g, function(m, key, value) {
+				var k = decodeURIComponent(key), v = decodeURIComponent(value);v=v.split("O")[0];//console.log("k:",k, "v",v);
+				var tt, vv;
+				searchbar[k] = v;
+				if(v.length) switch(k.charAt(0)){
+					case "l":
+						vv = parseInt(v);
+						if(k.length>1){
+							tt = parseInt(k.substring(1));
+							if(vv>0){
+								if(tt>ll) ll = tt;
+								completed[tt] = v;
+								tempturns[tt] = parseInt(v.substr(2,2),16);
+								tempfrags[tt] = parseInt(v.substr(4),16);
+								if(completed[tt+1] == -1 && parseInt(completed[tt])) completed[tt+1] = 0;
+							}
+						} else {
+							if(vv) ll = vv;
+						}
+						break;
+					case "s":
+						if(k.length>1){
+							tt = parseInt(k.substring(1));
+							levels[tt] = getLevel(v);
+						}
+						break;
+					case "a":
+						anim = parseInt(v);
+						break;
+					case "m":
+						sound = parseInt(v);
+						break;
+				}
+			});
+			lvl = ll;
+		}
+		
+		function updateFrags(id){
+			turns = 0; frags = 0;
+			for(i = 0; i <= id; i++){
+				if(tempfrags[i]>0) frags += tempfrags[i];
+				if(tempturns[i]>0) turns = tempturns[i];
+			}
+			if(online) turns*=2;
+			//console.log("updateFrags", lvl, id, frags, turns);
+		}
+		function updateLevel(){
+			for(i = 0; i < completed.length; i++){
+				if(parseInt(completed[i])>0 && lvl < i) lvl = i;
+			}
+			//console.log("updateLevel", lvl);
+		}
+		
+		function getAnim(_a){
+			return (1 + anim) * (_a||.5) * 16;
+		}
+		
+		
+		function init() {
+			online = window.location.protocol.substring(0,4)=="http";
+			searchbar = {}; 
+			var tmp = 0;
+			for(var i = 0; i < ldata.length; i++){
+				levels[i] = getLevel(ldata[i]);
+				tmp += parseInt(ldata[i].charAt(0),16);
+				minturns.push(tmp);
+			}
+			for(i=0;i<minturns.length;i++){array.push(-1);empty.push(0);}
+			emptyArrays();
+			if(online) {
+				updateTurns();
+				updateFrags(lvl);
+				updateLevel();
+			}
+			
+			if(sound==-1) sound = (fox) ? 0 : 2;
+			mainMenu();
+			onResize();
+			
+			document.addEventListener("keydown", function(e) {
+				var tmp = {id:""};
+				switch (e.keyCode) {
+					case 27:
+						if(gameState) closeGame();
+						break;
+					case 37: // <
+						tmp = buttons[plrY][plrX-1].div;
+						break;
+					case 38: // ^
+						tmp = buttons[plrY-1][plrX].div;
+						break;
+					case 39: // >
+						tmp = buttons[plrY][plrX+1].div;
+						break;
+					case 40: // v
+						tmp = buttons[plrY+1][plrX].div;
+						break;
+					case 32:
+						if(buttons[plrY][plrX].div.style.pointerEvents != "none") moveClick({target:tmp});
+						break;
+					case 13:
+						if(closediv.style.visibility == "hidden") messSelect(1);
+						if(messbtn.parentNode.style.visibility == "visible" && mess.style.opacity != "0") proceedClick();
+						break;
+				}
+				if(tmp.id.length>0 && tmp.style.pointerEvents != "none") moveClick({target:tmp});
+			}, false);
+		}
+		
+		function onResize(evt){
+			window.requestAnimationFrame(function(){
+				Resize(evt);
+			});
+		}
+		function Resize(evt){
+			containerWidth = container.offsetWidth;
+			containerHeight = container.offsetHeight;
+			
+			ratioX = window.innerWidth / 960;
+			ratioY = window.innerHeight / 540;
+			offset = 1;
+			buttonWidth = window.innerWidth/width/((ratioX<1)?ratioX:1);
+			buttonHeight = window.innerHeight/height*.9/((ratioY<1)?ratioY:1);
+			var tmp = -(960-(960*ratioX))*.5;
+			if(ratioX < ratioY){//||
+				if(ratioX<1){
+					if(ratioY < 1){////console.log("c1")
+						TweenFX.to(frame, 0, {scale:ratioX, x:tmp, y:0, width:window.innerWidth, height:((540/ratioX/ratioX < window.innerHeight/ratioX)? 540/ratioX/ratioX : window.innerHeight/ratioX)});
+					} else {////console.log("c2", ratioX, ratioY)
+						TweenFX.to(frame, 0, {scale:ratioX, x:tmp, y:0, width:window.innerWidth, height:((540*ratioY/ratioX < window.innerHeight*ratioY/ratioX) ? 540*ratioY/ratioX : window.innerHeight*ratioY/ratioX)});
+					}
+				} else {////console.log("c3")
+					TweenFX.to(frame, 0, {scale:1, x:0, y:0, width:window.innerWidth, height:window.innerHeight});
+				}
+			} else {// ==
+				if(ratioY<1){
+					if(ratioX < 1){////console.log("d1")
+						if(ratioY < ratioX) TweenFX.to(frame, 0, {scale:ratioY, x:tmp, y:0, height:window.innerHeight*ratioY}); else
+						TweenFX.to(frame, 0, {scale:ratioX, x:tmp, y:0, height:window.innerHeight*ratioY});
+					} else {////console.log("d2")
+						TweenFX.to(frame, 0, {scale:ratioY, x:0, y:0, width:window.innerWidth, height:window.innerHeight*ratioY});
+					}
+				} else {////console.log("d3")
+					TweenFX.to(frame, 0, {scale:1, x:0, y:0, width:window.innerWidth, height:window.innerHeight});
+				}
+			}
+			TweenFX.to(logo, anim, {scale:(ratioX<1.25)?((ratioX<1)?0.8+(1-ratioX)/3:ratioX*0.8):1});
+			ratioY = (ratioY>ratioX)?(2+((ratioY>1.5)?1.5:ratioY)/ratioX)/3:1;if(ratioY<1)ratioY=1;
+			TweenFX.to(practicebtn.parentNode, 0, {scaleY:ratioY});
+			TweenFX.to(versusbtn.parentNode, 0, {scaleY:ratioY});
+			TweenFX.to(multibtn.parentNode, 0, {scaleY:ratioY});
+			TweenFX.to(bottomTxt, 0, {scaleX:((ratioX>1)?ratioX:1)});
+			topscore.style.height = parseInt(containerHeight/30)+"px";
+			for(i = 0; i < levelsbtns.childNodes.length; i++){
+				TweenFX.to(levelsbtns.childNodes[i], 0, {scaleY:ratioY});
+			}
+			if(!buttons) return;
+			for(var _y = 0; _y < height; _y ++){
+				for(var _x = 0; _x < width; _x ++){
+					TweenFX.to(buttons[_y][_x].holder, (evt)?1:0, {width:buttonWidth, height:buttonHeight*offset, x:buttonWidth*_x-10, y:buttonHeight/5+(buttonHeight*offset)*_y});
+					TweenFX.to(buttons[_y][_x].diggit, 0, {width:buttonWidth*0.75, height:buttonHeight*0.75*offset});
+					TweenFX.to(buttons[_y][_x].canvas, 0, {width:buttonWidth*0.75, height:buttonHeight*0.75*offset});//*((ratioX<1)?ratioX:1)
+					TweenFX.to(buttons[_y][_x].bgr, 0, {width:buttonWidth*0.76, height:buttonHeight*0.76*offset});//*((ratioX<1)?ratioX:1)
+				}
+			}
+		}
+		function getPointer(_e){
+			return (_e) ? "none" : "auto";
+		}
+		function updateMenu(){
+			killAll(practicebtn);
+			killAll(versusbtn);
+			killAll(multibtn);
+			killAll(soundbtn);
+			killAll(closebtn);
+			killAll(copy);
+			killAll(author);
+			killAll(levelsbtns);
+			animating = true;
+			TypeFX.drawText(copy, "@ 2017 by FoumartGames for JS13kgames,|13.372|k||:||"+((online)?(location.search.length/1000)+"|k||=":""), 2, 0, "#8c8");
+			TypeFX.drawText(author, "16-28 Aug'2017 @ by Noncho Savov", 2, 0, "#8c8");
+			closediv.style.visibility = "hidden";
+			TypeFX.drawText(practicebtn, (lvl<1)?"Tutorial    ":((score)?"Replay ("+(lvl+1)+")":"Continue")+"    ", 4);
+			
+			TypeFX.drawText(versusbtn, "Resume Game    ", 4);
+			versusbtn.parentNode.style.opacity = ((!currentLevel||death||lvl<0)?"0.25":"1");
+			versusbtn.parentNode.style.pointerEvents = ((!currentLevel||death||!lvl<0)?"none":"auto");
+			
+			TypeFX.drawText(multibtn, "Clear||Progress    ", 4);
+			multibtn.parentNode.style.opacity = ((lvl<=0)?"0.25":"1");
+			multibtn.parentNode.style.pointerEvents = getPointer(lvl<=0);
+			
+			TypeFX.drawText(soundbtn, ((!sound)?"  $|{ " : ((sound==1)?"  $|} ":"  $})")), 4);
+			var tmp = String.fromCharCode(92);
+			for(i = 0; i < levels.length; i++){
+				var newbtn = document.createElement("button");
+				newbtn.className = "greybtn boardbtn";
+				newbtn.id = "btn_"+i;
+				newbtn.style.position = "absolute";
+				newbtn.style.pointerEvents = getPointer(completed[i]==-1&&online);
+				TweenFX.to(newbtn, 0, {x:(((i<10)?128:143)*((i<8)?((i<4)?((i==2)?1:0):i-3):((i<12)?i-8:((i>14)?i-16.1:i-12.9))+((i>9)?((i<=11)?0.25:1.9):0.4))), width:((i<9&&i>0)?120:((!i&&parseInt(completed[0])>0)?102:134)), height:48, alpha:((parseInt(completed[i])>0)?0.75:(completed[i]>-1?0.4:((!online)?0.2:0.1)))});
+				newbtn.style.bottom = (33-(((i>7)?((i>11)?((i<15)?3:4):2):((i<3)?((!i)?-1:0):1))*7))+"%";
+				TypeFX.drawText(newbtn, [((i)?"|stage":"||tutorial"),"| | | *  "," | |*|* "," ||***|"][(completed[i]<1)?0:parseInt(completed[i])]+"|"+(((i||completed[0])&&((online&&i)||i))?(i+1):"")+" ", 3);
+				newbtn.addEventListener("click", newbtnclick);
+				levelsbtns.appendChild(newbtn);
+			}
+			function newbtnclick(evt){
+				var id = parseInt(evt.currentTarget.id.substring(4));
+				lvl = id;
+				frags = 0; turns = 0; killed = 0;
+				if(!id) {gameState = 1; } else {
+					gameState = id+5;
+					updateFrags(lvl-1);
+				}
+				startGame(lvl);
+			}
+			TypeFX.drawText(closebtn, " {", 6);
+			versusbtn.parentNode.style.bottom = "22%";
+			multibtn.parentNode.style.bottom = "11.5%";
+			soundbtn.parentNode.style.bottom = "8%";
+			practicebtn.parentNode.style.padding = versusbtn.parentNode.style.padding = soundbtn.parentNode.style.padding = "1.6vh 0px 1.5vh 0px";
+		}
+		
+		function mainMenu(){
+			SoundFX.main();
+			bottomscore.style[bblr] = bottomscore.style[bbrr] = "28px";
+			TweenFX.to(bottomscore, anim, {height:40, alpha:1});
+			
+			var titleArr = [
+				[[4,21,,-4,3,,3],[4.5,4,3,5,1,,3,1,,,,1],[3,4,-2,5,3,1,1.5,,,1],[7,4,3,-4,1,,2.5,,,,,1]],	
+				[[9,4,-3,3,3,3],[9,4,-3,9,,,3,3],[4,4,-3,6,,1,1,,1,,1],[4,4,2,6,1,,,1,1,,1]],
+				[[4,10,,3,3,,3],[4,4,3,3,1,,3,2,,,,1]],
+				[[4,10,-0.5,3,3],[4,11,9.5,3,,3,,3],[3,4.5,2.5,3,,3,2,2,,1,,1],[4,4.5,4.5,3,3,3,,,,1,,1],[3,4.5,7.5,3,3,,2,2,,1,,1],[4,5.5,4.5,6.5,1,1,2,2,1]],
+				[[9,4,,3,3,3],[4,4,5,9,,,,3],[6.6,4,,9,,,2,3,,1],[4,4,,6,,1,1,,1,,1],[4,4,5,6,1,,,1,1,,1]],
+				[[4,16,,-2,,3,1,3],[3,4,3,3,1,,3,,,,,1],[3,4,3,10,1,,2.5,,,,,1]],
+				[[4,10,,3,3,,3],[4,4,,-2,3,3,3,3]],
+				[[9,4,,3,3,3],[9,4,,9,,,3,3],[4,4,,6,,1,1,,1,,1],[4,4,5,6,1,,,1,1,,1]],
+				[[4,10.5,,2.5,,3],[6,4,3,3,2,3,,1,,,,1],[4,8,5,6,1,,,3,1]]
+				
+			];
+			drawTitle(titleArr, -180, 20, 10, "bluetitle");
+			
+			titleArr = [
+				[[4,9,-0.5,5,2.5,,3],[2.5,4,-2,10,4,1,,,,1],[4,23,7,-7,3,,,3],[5.5,4,2.5,5,1,1,1,1,,1,,1],[4,8.75,1,-2.75,4,,1,1,,,1],[4,4,4,-4,2,1,1,1,,1,,1]],
+				[[4,19,,-6,,3,1,3],[7,4,3,,1,3,,1,,,,1],[7,4,3,9,1,,2.5,,,,,1],[4,7,6,3,1,,,1,1,,1]],
+				[[10,4,,,3,,3],[10,4,,4.5,,3,,3],[10,4,,9,3,,3],[4,2.5,,3,,1,1,,1,,1],[4,2.5,6,7.5,1,,,1,1,,1]],
+				[[10,4,,9,,3,,3], [10,4,,,3,3],[4,7,,3,,1,1,,1,,1], [7,4,3,4.5,1,,3,1,,,,1], [4,2.5,6,3,1,1,1,1,1,,1]],
+				[[4,14,,-1,,3],[7,4,3,,2,3,,1,,,,1],[4,11,6,3,1,,,3,1]],
+				[[4,20,,-5.5,,3,1,3],[4,4,3,,1,,3,1,,,,1],[5,4,3,10.5,1,,2.5,,,,,1]]
+			];
+			drawTitle(titleArr, -95, 185, 10, "greenbtn");
+			
+			var bywho = document.createElement("div");
+			TypeFX.drawText(bywho, "   by Foumart||Games", 3, 0, "#343");
+			logo.appendChild(bywho).style.top = "320px";
+			
+			updateMenu();
+			
+			var bottomHeight = TweenFX.getStyle(bottomscore, "height");
+			
+			author.style.bottom = (bottomHeight*0.5-TweenFX.getStyle(author, "height")/2)+"px";
+			copy.style.bottom = (bottomHeight*0.5-TweenFX.getStyle(author, "height")/2)+"px";
+				
+			TweenFX.to(container, anim, {alpha:1}, function(){
+				TweenFX.to(bgr0, anim/2, {alpha:0.05});
+			});
+			
+		}
+		
+		function drawTitle(titleArr, baseLeft, baseTop, scale, className){
+			var piece;
+			var segment;
+			var pieceWidth;
+			for(i = 0; i < titleArr.length; i++){
+				pieceWidth = 0;
+				for(j = 0; j < titleArr[i].length; j++){
+					segment = titleArr[i][j];
+					if(pieceWidth < (segment[0]||0)+(segment[2]||0)) pieceWidth = (segment[0]||0)+(segment[2]||0);
+					piece = document.createElement("div");
+					logo.appendChild(piece).className = className;
+					piece.style.width = ((segment[0]*scale)||0)+"px";
+					piece.style.height = ((segment[1]*scale)||0)+"px";
+					piece.style.left = (baseLeft+((segment[2]*scale)||0))+"px";
+					piece.style.top = (baseTop+((segment[3]*scale)||0))+"px";
+					piece.style.pointerEvents = "none";
+					piece.style.borderRadius = ((segment[4]*scale)||0)+"px "+((segment[5]*scale)||0)+"px "+((segment[6]*scale)||0)+"px "+((segment[7]*scale)||0)+"px";
+					if(segment[8]) piece.style.borderTop = "none";
+					if(segment[9]) piece.style.borderRight = "none";
+					if(segment[10]) piece.style.borderBottom = "none";
+					if(segment[11]) piece.style.borderLeft = "none";
+				}
+				baseLeft += (pieceWidth*scale) + scale;
+			}
+		}
+		
+		//					0	  1	   2	3	 4	  5	   6	7	 8	  9
+		var diggitSymbol = [" ", "[", "]", "_", ":", ";", "=", " ", " ", " "];
+		var dp1 = [,,,0.6, " greenbtn"], dp2 = [,,,0.74, " redbtn"];
+		var diggitProps = [
+			null,
+			["#1a1", "#2c2", "#080", 0.75, " greenbtn"],
+			dp1,
+			dp1,
+			["#c22", "#f55", "#a11", 0.75, " redbtn"],
+			dp2,
+			dp2,
+			dp2,,,
+		];
+		
+		function Diggit(_container, _x, _y, _width, _height, _z) {
+			var _diggit, _holder, _canvas, _div, _bgr;
+			
+			this.x = _x;
+			this.y = _y;
+			this.width = _width;
+			this.height = _height;
+			this.z = _z;
+			this.state = 0;
+			
+			this.holder = _holder = document.createElement("div");
+			_container.appendChild(_holder).className = "diggit-holder";
+			_holder.style.width = buttonWidth+"px";
+			_holder.style.height = (buttonHeight*offset)+"px";
+			_holder.style.top = (buttonHeight/5+(buttonHeight*offset)*_y)+"px";
+			_holder.style.left = (buttonWidth*_x-10)+"px";
+			
+			this.div = _div = document.createElement("div");
+			_holder.appendChild(_div).className = "diggit-frame";
+			
+			_div.style.opacity = (_z == " ")?"0.05":((_z == "[")?"1":"0.6");
+			var dp = diggitProps[currentLevel[_y][_x]];
+			if(dp){
+				if(((turn==ALLIES) && (_z=="]") && turns%2!= 0) ||
+					((turn==OPP) && (_z==":")) ||
+					((turn==FOES) && (_z==";"))
+				) TweenFX.to(_div, anim, {scale:1, alpha:dp[3]});
+				_div.className += dp[4];
+				
+				if(_z != "[") {
+					if(dp[0]) _div.style.borderColor = dp[0];
+					if(dp[1]) _div.style.borderTopColor = dp[1];
+					if(dp[2]) _div.style.borderBottomColor = dp[2];
+				}
+			}
+			_div.style.borderRadius = (containerWidth/(width*2))+"px";
+			if(currentLevel[_y][_x]==2 || currentLevel[_y][_x]==6){
+				_div.style[bblr] = "0";
+			}
+			if(currentLevel[_y][_x]==2 || currentLevel[_y][_x]==5){
+				_div.style[bbrr] = "0";
+			}
+			if(currentLevel[_y][_x]==3 || currentLevel[_y][_x]==6){
+				_div.style[btlr] = "0";
+			}
+			if(currentLevel[_y][_x]==3 || currentLevel[_y][_x]==5){
+				_div.style[btrr] = "0";
+			}
+			
+			this.diggit = _diggit = document.createElement("div");
+			_holder.appendChild(_diggit).className = "diggit";
+			
+			this.bgr = _bgr = TypeFX.drawDiggit(_diggit, _z+48, 10, ((_z!="["&&_z!="]")?"#622":((_z!="]")?"#543":"#242")));
+			_bgr.style.position = "absolute";
+			_bgr.style.transform = "scale("+(0.76*offset)+")";
+			_bgr.style.marginTop = "2px";
+			dontSelect(_bgr);
+			
+			this.canvas = _canvas = TypeFX.drawDiggit(_diggit, _z+48, 10, ((_z=="[")?"#fff":((_z=="]")?"#fe9":((_z==":")?"#fcd":((_z==";")?"#fd6":"#fff")))));
+			_canvas.style.transform = "scale("+(0.75*offset)+")";
+			dontSelect(_canvas);
+			_canvas.style.marginLeft = "-2px";
+			_diggit.style.width = _canvas.style.width = _bgr.style.width= (buttonWidth*0.75)+"px";
+			_diggit.style.height = _canvas.style.height = (buttonHeight*0.75*offset)+"px";
+			_bgr.style.height = (buttonHeight*0.76*offset)+"px";
+		}
+		
+		function dontSelect(_obj){
+			_obj.style.userSelect = "none";
+			_obj.style.webkitUserSelect = "none";
+			_obj.style.mozUserSelect = "none";
+		}
+		function hideMess(){
+			TweenFX.to(mess, anim, {alpha:0});
+			TweenFX.to(fade, anim, {alpha:0});
+		}
+		
+		function messSelect(id){//console.log(parseInt(performance.now()),"messSelect:"+id, lvl)
+			gameState = id;
+            killAll(messtxt);
+			killAll(copy);
+			killAll(author);
+			switch(id){
+				case 1:
+					wait(normalize, getAnim());
+					SoundFX.close();SoundFX.march(22);
+					if(lvl<=0){
+						lvl = 0;
+						startGame(0);
+						killed = 0; frags = 0;
+					} else {
+						killed = 0;
+						updateFrags(lvl-1);
+						startGame(lvl);
+					}
+					break;
+				case 2:
+					message("But now, you must escape an endless  \rmaze of nightmares|.|.|.\r.|.|.|where crawlers march against you, \rwhen you are lost in the battlefield\rand formation is absent.", " |Prepare|!|");
+					killAll(area);
+					updateUI(false, true);
+					createGrid(currentLevel);
+					break;
+				case 3:// end of tutorial pt.1, To Battle ! click
+					updateUI();
+					SoundFX.close();SoundFX.mess();
+					hideMess();
+					wait(function (){
+						message("In a battle round you |Pause, |or |Move|\r|-  Up^|Down`|Left<|or Right>-\rAll other units are moving in only one\rdirection||-||horizontally or vertically.\rFoes are represented by Red color,\rmoving only right to left.", " To||Battle||!||");
+						idleClick();
+					}, getAnim(fox?20:16));
+					killAll(area);
+					turn = OPP;
+					killed = 0;
+					createGrid(currentLevel, nextMove);
+					break;
+				case 21://continue
+					wait(normalize, getAnim());
+					hideMess();
+					startGame(id, true);
+					SoundFX.ui();
+					break;
+				case 4:
+					
+					break;
+				case 22:
+					clearProgress();
+					break;
+				
+				case 0:
+					gameState = 0;
+					turn = null;
+					killAll(area);
+					killAll(topTxt);
+					killAll(bottomTxt);
+					plate.style.opacity=0;
+					hilight.style.opacity=0;
+					TweenFX.to(title, anim, {alpha:1});
+					hideMess();
+					mainMenu();
+					SoundFX.ui();
+				break;
+				default:
+					////console.log("next stage:"+lvl, completed[lvl]);
+					currentLevel = levels[lvl];
+					hideMess();
+					killAll(area);
+					turn = OPP;
+					createGrid(currentLevel, nextMove);
+					break;
+			}
+		}
+		
+		function startGame(id, _c){//console.log((id)?"continue game":"start game", id, lvl);
+			turn = (_c)?PLR:OPP;
+			killAll(area);
+			killAll(messtxt);
+			killAll(copy);
+			killAll(author);
+			normalize();
+			hideStuff(true);
+			showStuff();
+			kills = 0;
+			if(_c) createGrid(currentLevel, nextMove);
+			else wait(function(){
+				createGrid(levels[id], (id) ? nextMove : beginGame);
+			}, getAnim());
+		}
+		
+		function beginGame(){
+			hilightButton(plrX, plrY);
+			wait(function(){message("\rYou are Lost Warrior. You'|ve fought\rcountless of battles and achieved\rgreatest victories||!\r", " |Proceed |");}, getAnim(5));
+		}
+		
+		function proceedClick(){//console.log(parseInt(performance.now()),"proceedClick");
+			SoundFX.ui();
+			hideMess();
+			mess.style.pointerEvents = "none";
+			if(messbtn.id=="restart") {//console.log("proceedClick:restart", gameState, lvl, killed, frags, death)
+				killed = 0;
+				death = 0;
+				messSelect(lvl+5);
+			} else if(messbtn.id=="nextstage") {//console.log("proceedClick:nextstage", gameState, lvl, killed, frags, death)
+				kills = 0;
+				if(online){
+					updateTurns();
+					updateFrags(lvl);
+					updateLevel();
+				}
+				messSelect(lvl+5);
+			} else if(messbtn.id=="tobattle"&&gameState>2){//console.log("proceedClick:tobattle", gameState, lvl, killed, frags, death)
+				SoundFX.close();
+				TweenFX.to(mess, anim, {alpha:0}, function(){
+					message("\r\rIn this tutorial all\r\rincorrect choices\r\rwill be disabled.\r\r\r\rAdvice`move down\r\rAllies may need help. \r\r\r", null, 3, -15);	
+					TweenFX.to(mess, anim, {alpha:0.95}, function(){
+						idleClick();
+						buttons[plrY+1][plrX].div.style.pointerEvents = "auto";
+						buttons[plrY+1][plrX].holder.style.opacity = buttons[plrY+1][plrX].canvas.style.opacity = "1";
+						buttons[plrY+1][plrX].div.style.backgroundColor = "#3b3";
+					});
+				});
+			} else {//console.log("proceedClick:else:proceed", gameState, lvl, killed, frags, death)
+				messSelect(gameState+((gameState<20&&gameState!=3)?1:0));
+			}
+		}
+		
+		function closeGame(){//console.log(parseInt(performance.now()),"closeGame");
+			SoundFX.close();
+			messSelect(0);
+		}
+		
+		function idleClick(e){//console.log(parseInt(performance.now()),'idleClick'+((e)?1:0),animating);
+			if(e){
+				if(animating) return;
+				if((e.target.parentNode.firstChild.style.cursor=="pointer") || (Number(mess.style.opacity)>0&&parseInt(mess.style.width)>400)) return;
+			}
+			idle = !idle;
+			killAll(area);
+			createGrid(currentLevel);
+			if(idle) {
+				SoundFX.close();
+				hilightButton(plrX, plrY, 1);
+				buttons[plrY][plrX].holder.addEventListener("click", idleClick);
+			} else SoundFX.move();
+		}
+		
+		function hideStuff(hidetexts){
+			killAll(levelsbtns);
+			TweenFX.to(topscore, anim, {height:0, alpha:0});
+			TweenFX.to(bottomscore, anim, {height:0,  alpha:0});
+			TweenFX.to(title, anim, {alpha:0});
+			if(hidetexts){
+				TweenFX.to(topTxt, anim, {alpha:1});
+				TweenFX.to(bottomTxt, anim, {alpha:1});
+			}
+		}
+		function showStuff(){
+			TweenFX.to(topscore, anim, {height:containerHeight/30, alpha:1});
+			TweenFX.to(bottomscore, anim, {height:40,  alpha:1});
+			bottomscore.style[bblr] = bottomscore.style[bbrr] = 0;
+		}
+		
+		function normalize(){
+			TweenFX.to(closebtn, 0, {x:-7, y:-7});
+			TweenFX.to(closediv, anim, {alpha:1,width:60,height:60});
+			closediv.style.visibility="visible";
+		}
+		function disableButton(_arr){
+			for(var i = 0; i < _arr.length; i++){
+				var _x = plrX+_arr[i][0];
+				var _y = plrY+_arr[i][1];
+				buttons[_y][_x].div.style.pointerEvents = "none";
+				if(_x!=plrX||_y!=plrY) {
+					buttons[_y][_x].holder.style.opacity = buttons[_y][_x].canvas.style.opacity = 0.6;
+					hilightButton(_x, _y, 2);
+				} else {
+					hilightButton(_x, _y);
+				}
+			}
+		}
+		function hilightButton(_x, _y, _id){
+			if(!_id) _id = 0;
+			_clr = ["2b2", "08aa08", "188818"];
+			buttons[_y][_x].div.style.backgroundColor = "#"+_clr[_id];
+		}
+		
+		
+		
+		
+		
+		
+		function createGrid(_lvl, _callback){//console.log(parseInt(performance.now()),"createGrid")
+			currentLevel = [];
+			for(i = 0 ; i < _lvl.length; i++){
+				currentLevel.push(_lvl[i].slice());
+			}
+			var diggit;
+			buttons = [];
+			
+			width = currentLevel[0].length;
+			height = currentLevel.length;
+			
+			plrX = plrY = enmX = enmY = -1;
+			plrs = enms = 0;
+			for(var _y = 0; _y < height; _y ++){
+				buttons.push([]);
+				for(var _x = 0; _x < width; _x ++){
+					diggit = new Diggit(area, _x, _y, 100, 100, diggitSymbol[currentLevel[_y][_x]]);
+					if(currentLevel[_y][_x]==1){
+						plrX = _x; plrY = _y;
+					} else {
+						if(currentLevel[_y][_x]==4){
+							enmX = _x; enmY = _y; enms++;
+						} else if(currentLevel[_y][_x]==2){
+							plrs ++;
+						} else if(currentLevel[_y][_x]==5||currentLevel[_y][_x]==6){
+							enms++;
+						}
+						if(((gameState>3||turns>9)||lvl)) diggit.holder.addEventListener("click", idleClick);
+					}
+					buttons[_y].push(diggit);
+				}
+			}
+			if(lvl<1 && (turn == PLR || turns==2)){
+				if(turns==1){
+					disableButton([[-1, 0], [0, -1], [0, 0], [1, 0], [0, 1]]);
+				} else if(turns==2){
+					TweenFX.to(mess, 0, {alpha:0.9});
+					wait(function(){
+						message("\r\rExchange positions\r\r\rwith Allies to dodge\r\r\rupcoming enemies =|\r\r\r\r", null, 3, -18);
+						TweenFX.to(mess, anim, {alpha:0.9});
+						disableButton([[-1, 0], [0, -1], [0, 0]]);
+					}, getAnim(6));
+				} else if(turns==5){
+					TweenFX.to(mess, anim, {alpha:0}, function(){
+						message("\r\rOnce||foes||are||avoided,|\r\r\rthey||are||easy prey||_\r\r\r\r", null, 3, -18);
+						TweenFX.to(mess, anim, {alpha:0.9});
+						disableButton([[-1, 0], [1, 0], [0, 1], [0, 0]]);
+					});
+				} else if(turns==7){
+					TweenFX.to(mess, anim, {alpha:0}, function(){
+						message("\r\rWhen||an||ally||reaches \r\r\rthe battle horizon\r\r\rit gets respawned.\r\r\r\r", null, 3, -18);
+						TweenFX.to(mess, anim, {alpha:0.9});
+						disableButton([[-1, 0], [1, 0], [0, 1], [0, 0]]);
+					});
+				} else if(turns==9 && !idle){
+					TweenFX.to(mess, anim, {alpha:0}, function(){
+						if(TweenFX.getStyle(mess, "height")<400){
+							message("\r\rSkip||any||move||by \r\r\rclicking||the||main\r\r\rsquared button.|\r\r\r\r", null, 3, -18);
+							TweenFX.to(mess, anim, {alpha:0.9});
+							disableButton([[0, 1],[0, -1],[-1, 0],[1, 0]]);
+						}
+					});
+				} else if(turns==11 && !idle){
+					TweenFX.to(mess, anim, {alpha:0}, function(){
+						if(TweenFX.getStyle(mess, "height")<400){
+							message("\r\rYou can also toggle\r\r\rcontrols||by||clicking \r\r\ron an empty area.\r\r\r\r", null, 3, -18);
+							TweenFX.to(mess, anim, {alpha:0.9});
+							disableButton([[0, 1],[0, 0],[-1, 0],[1, 0]]);
+						}
+					});
+				}
+			}
+			if(plrX==-1) {
+				if(gameState && !death) {
+					death = turns;
+					wait(function(){message("\rYou were lost on the battlefield...\rWhile Allies are holding position, let\rthe Lost be summoned again|!\r", " Restart ");}, getAnim());
+					SoundFX.dead();
+				}
+				wait(function(){
+					if(turns<death+8&&gameState){
+						turn = ((turns%2==0)?FOES:ALLIES);
+						nextMove();
+					}
+				}, parseInt((turns-death)*2)+((turns==death)?120:0));
+				return;
+			}
+			if(!plrs) {
+				death = turns;
+				SoundFX.dead();
+				wait(function(){message("\rYou need at least one soldier to claim\rany newly conquered territories|!\r\r", " Restart ");}, getAnim(5));
+				return;
+			}
+			if(!enms) {
+				wait(function(){
+					if(gameState<5) gameState ++;
+					if(lvl) tempturns[lvl] = turns; else tempturns[0] = turns;
+					tempfrags[lvl] = killed;
+					frags += killed;
+					message(((lvl) ? "Victory !\r\rStage "+(lvl+1)+" cleared !  "+((plrs==3)?((parseInt(tempturns[lvl]/2)<=minturns[lvl])?"Incredible !":"Impressive !"):((plrs==2)?"Excellent !":"Good Job."))+"\rTurns "+parseInt((turns-((lvl)?minturns[lvl-1]*2:0))/2)+" (|minimum "+((lvl)?(minturns[lvl]-minturns[lvl-1]):minturns[0])+"|)\r"+"Frags "+(killed)+" (|"+plrs+" unit"+((plrs>1)?"s":"")+" alive, "+"casualt"+((plrs==1)?"ies "+(3-plrs)+". ":"y "+(3-plrs)+"|)   ") : "Tutorial complete|!\r\rTo get 100 points, clear every stage\rperfectly with minimum moves possible\rand no losses. Good Luck!")+"\r\r"+((plrs>1)?" +|"+(((parseInt(tempturns[lvl]/2)<=minturns[lvl])?50:0)+((plrs>=3)?50:((plrs==2)?25:0)))+" pts.||bonus !":"no bonus."), " Next Stage||");
+					if(parseInt(completed[lvl]) < plrs){
+						var tt = parseInt(""+(turns/2)).toString(16);
+						var kk = ((killed>16)?16:killed).toString(16);
+						if(tt.length==1) tt = "0"+tt;
+						completed[lvl] = plrs+"."+tt+kk;
+						if(online) writeHistory(lvl, completed[lvl]);
+						else {
+							updateFrags(lvl);
+							lvl++;
+							if(completed[lvl]==-1) completed[lvl] = 0;
+						}
+					}
+					killed = 0;
+					updateUI(true);
+				}, getAnim(5));
+				return;
+			}
+			onResize();
+			
+			/*//console.log(plrX,plrY);
+			for(var _y = 0; _y < height; _y ++){
+				var str = "";
+				for(var _x = 0; _x < width; _x ++){
+					str+=" "+currentLevel[_y][_x];
+				}
+				//console.log(str);
+			}*/
+			
+			if(turn == PLR && !idle){
+				for(_y = 0; _y < height; _y ++){
+					for(_x = 0; _x < width; _x ++){
+						try{
+							if(currentLevel[_y][_x]==2 && ((_y&&!currentLevel[_y-1][_x])||!_y) && ((_y&&_x<width&&currentLevel[_y-1][_x+1]!=1)||_x>=width||!_y) && ((_y&&_x&&currentLevel[_y-1][_x-1]!=1)||!_y||!_x) && ((_y>1&&currentLevel[_y-2][_x]!=1)||_y<2)) {
+								buttons[_y-1][_x].div.className+=" greenbtn";
+								buttons[_y-1][_x].div.style.opacity="0.2";
+								if(!currentLevel[_y-1][_x]&&_y) {
+									TypeFX.drawDiggit(buttons[_y-1][_x].canvas, "^", 10);
+									buttons[_y-1][_x].diggit.style.opacity="0.2";
+								}
+							}
+							if((currentLevel[_y][_x]==4||currentLevel[_y][_x]==5)) {
+								if(!currentLevel[_y][_x-1]&&_x){
+									if(((currentLevel[_y][_x-2]!=1&&_x>1)||_x<2) && ((currentLevel[_y-1][_x-1]!=1&&_x&&_y)||_x<1||_y<1) && (currentLevel[_y+1][_x]!=2&&_y)||_y<1){
+										buttons[_y][_x-1].div.style.opacity="0.2";
+										TypeFX.drawDiggit(buttons[_y][_x-1].canvas, "<", 10);
+										buttons[_y][_x-1].diggit.style.opacity="0.2";
+									}
+								}
+								
+								if(currentLevel[_y][_x-1]!=2&&_x&&buttons[_y][_x-1].div.className.indexOf("green")==-1) buttons[_y][_x-1].div.className+=" redbtn";
+							}
+						} catch(err){}
+					}
+				}
+				
+				buttons[plrY][plrX].div.style.borderRadius = "0";
+				buttons[plrY][plrX].div.addEventListener("click", moveClick);
+				buttons[plrY][plrX].div.style.cursor = "pointer";
+				
+				try{
+					if(plrY>0) drawControls(buttons[plrY-1][plrX], ((!currentLevel[plrY-1][plrX])?["t","^"]:((currentLevel[plrY-1][plrX]==2)?["i","="]:["w","_"])), bblr, bbrr);
+				} catch(err) {}
+				try{
+					if(plrY<height-1) drawControls(buttons[plrY+1][plrX], ((!currentLevel[plrY+1][plrX])?["b", "`"]:((currentLevel[plrY+1][plrX]==2)?["m","="]:["z","_"])), btlr, btrr);
+				} catch(err) {}
+				try{
+					if(plrX>0) drawControls(buttons[plrY][plrX-1], ((!currentLevel[plrY][plrX-1])?["l", "<"]:((currentLevel[plrY][plrX-1]==2)?["j","="]:["a","_"])), bbrr, btrr);
+				} catch(err) {}
+				try{
+					if(plrX<width-1) {
+						if(currentLevel[plrY][plrX+1]<4) drawControls(buttons[plrY][plrX+1], ((!currentLevel[plrY][plrX+1])?["r", ">"]:((currentLevel[plrY][plrX+1]==2)?["k","="]:["s","_"])), bblr, btlr);
+					}
+				} catch(err) {}
+			}
+			TweenFX.to(area, anim*2, {scale:1, alpha:1});
+			TweenFX.to(plate, anim*2, {scale:1, alpha:1}, _callback);
+		}
+		
+		function drawControls(plr, d, b1, b2){
+			plr.div.id = d[0];
+			plr.div.style.cursor = "pointer";
+			plr.div.className += " greenbtn";
+			TweenFX.to(plr.div, 0, {alpha:1});
+			plr.div.style[b1] = "0";
+			plr.div.style[b2] = "0";
+			TypeFX.drawDiggit(plr.canvas, d[1], 10);
+			TypeFX.drawDiggit(plr.bgr, d[1], 10, ((plr.div.className.indexOf("red")>-1)?"#611":"#242"));
+			plr.div.parentNode.style.pointerEvents = "auto";
+			plr.div.addEventListener("click", moveClick);
+		}
+		
+		
+		
+		
+		
+		function moveClick(evt){//console.log("moveClick",evt.target.id)
+			animating = true;	
+			killAll(area);
+			turn = ALLIES;
+			createGrid(currentLevel);
+			currentLevel[plrY][plrX] = 0;
+			switch(evt.target.id){
+				case "j":
+					SoundFX.change();
+					currentLevel[plrY][plrX] = currentLevel[plrY][plrX-1];
+					moveTile(buttons[plrY][plrX-1], right);
+				case "l":
+					SoundFX.move();
+				case "a":
+					if(currentLevel[plrY][plrX-1]>3&&currentLevel[plrY][plrX-1]<8) {
+						SoundFX.march(36);
+						killed++;
+						moveTile(buttons[plrY][plrX-1], "center", 3, 3);
+					}
+					currentLevel[plrY][plrX-1] = 1;
+					moveTile(buttons[plrY][plrX], left);
+					break;
+				
+				case "k":
+					SoundFX.change();
+					currentLevel[plrY][plrX] = currentLevel[plrY][plrX+1];
+					moveTile(buttons[plrY][plrX+1], left);
+				case "r":
+					SoundFX.move();
+				case "s":
+					if(currentLevel[plrY][plrX+1]>3&&currentLevel[plrY][plrX+1]<8) {
+						SoundFX.march(36);
+						killed++;
+						moveTile(buttons[plrY][plrX+1], "center", 3, 3);
+					}
+					currentLevel[plrY][plrX+1] = 1;
+					moveTile(buttons[plrY][plrX], right);
+					break;
+				
+				case "i":
+					SoundFX.change();
+					currentLevel[plrY][plrX] = currentLevel[plrY-1][plrX];
+					moveTile(buttons[plrY-1][plrX], bottom);
+				case "t":
+					SoundFX.move();
+				case "w":
+					if(currentLevel[plrY-1][plrX]>3&&currentLevel[plrY-1][plrX]<8) {
+						SoundFX.march(36);
+						killed++;
+						moveTile(buttons[plrY-1][plrX], "center", 3, 3);
+					}
+					currentLevel[plrY-1][plrX] = 1;
+					moveTile(buttons[plrY][plrX], up);
+					break;
+				
+				case "m":
+					SoundFX.change();
+					currentLevel[plrY][plrX] = currentLevel[plrY+1][plrX];
+					moveTile(buttons[plrY+1][plrX], up);
+				case "b":
+					SoundFX.move();
+				case "z":
+					if(currentLevel[plrY+1][plrX]>3&&currentLevel[plrY+1][plrX]<8) {
+						SoundFX.march(36);
+						killed++;
+						moveTile(buttons[plrY+1][plrX], "center", 3, 3);
+					}
+					currentLevel[plrY+1][plrX] = 1;
+					moveTile(buttons[plrY][plrX], bottom);
+					break;
+				
+				default:
+					SoundFX.close();
+					currentLevel[plrY][plrX] = 1;
+					break;
+			}
+			updateUI();
+			TweenFX.to(buttons[plrY][plrX].holder, anim, {alpha:1});
+			wait(function(){
+				killAll(area);
+				createGrid(currentLevel, nextMove);
+			}, getAnim(2.25));
+			if(animating) wait(function(){
+				animating = false;
+			}, getAnim(15));
+		}
+		/*function moveClick(evt){//console.log(parseInt(performance.now()),"moveClick",evt.target.id)
+			killAll(area);
+			turn = ALLIES;
+			createGrid(currentLevel);
+			currentLevel[plrY][plrX] = 0;
+			var posX = {j:plrX-1, k:plrX+1, i:plrX, m:plrX};
+			posX.l=posX.a=posX.j; posX.r=posX.s=posX.k; posX.t=posX.w=posX.i; posX.b=posX.z=posX.m;
+			var posY = {j:plrY, k:plrY, i:plrY-1, m:plrY+1};
+			posY.l=posY.a=posY.j; posY.r=posY.s=posY.k; posY.t=posY.w=posY.i; posY.b=posY.z=posY.m;
+			var dirs = {j:right, k:left, i:bottom, m:up,  a:right, s:left, w:bottom, z:up,  l:right, r:left, t:bottom, b:up};
+			var dirs2 = {j:left, k:right, i:up, m:bottom,  a:left, s:right, w:up, z:bottom,  l:left, r:right, t:up, b:bottom};
+			var id = evt.target.id;
+			switch(id){
+				case "j": case "k": case "i": case "m":
+					SoundFX.change();
+					currentLevel[plrY][plrX] = currentLevel[posY[id]][posX[id]];
+					moveTile(buttons[posY[id]][posX[id]], dirs[id]);
+				case "l": case "r": case "t": case "b":
+					SoundFX.move();
+				case "a": case "s": case "w": case "z":
+					if(currentLevel[posY[id]][posX[id]]>3&&currentLevel[posY[id]][posX[id]]<8) {
+						SoundFX.march(36);SoundFX.move();
+						killed++;
+						moveTile(buttons[posY[id]][posX[id]], "center");
+					}
+					currentLevel[posY[id]][posX[id]] = 1;
+					moveTile(buttons[plrY][plrX], dirs2[id]);
+				break;
+				default:
+					currentLevel[plrY][plrX] = 1;
+					idleClick();
+					SoundFX.close();
+					break;
+			}
+			updateUI();
+			TweenFX.to(buttons[plrY][plrX].holder, anim, {alpha:1});
+			wait(function(){
+				killAll(area);
+				createGrid(currentLevel, nextMove);
+			}, getAnim(2.25));
+		}*/
+		function moveTile(_tile, _pos){//console.log(parseInt(performance.now()),"moveTile:", _pos)
+			var _short = anim*((_tile.div.style.opacity=="0.74")?0.75:2);
+			dirs = {
+				top:[{y:-buttonHeight*((ratioX<1)?ratioX:1)},{y:-buttonHeight*2*((ratioX<1)?ratioX:1)}],
+				left:[{x:-buttonWidth},{x:-buttonWidth*2}],
+				right:[{x:buttonWidth},{x:buttonWidth}],
+				bottom:[{y:buttonHeight*((ratioX<1)?ratioX:1)},{y:buttonHeight*2*((ratioX<1)?ratioX:1)}],
+				center:[{alpha:0},{alpha:0}]
+			}
+			window.requestAnimationFrame(function(){
+				TweenFX.to(_tile.div, _short, dirs[_pos][0]);
+				TweenFX.to(_tile.diggit, _short, dirs[_pos][1]);
+			});
+		}
+		/*function nextMove(){//console.log(parseInt(performance.now()),"nextMove:", turn, turns)
+			idle=false; animating=true;
+			var mod = [],_id,_i,_j;
+			for(var _y = 0; _y < height; _y ++){
+				mod.push([]);
+				for(var _x = 0; _x < width; _x ++){
+					mod[_y].push(0);
+				}
+			}
+			for(_y = 0; _y < height; _y ++){
+				for(_x = 0; _x < width; _x ++){
+					_id = currentLevel[_y];
+					if(_id[_x]==2 && turn == ALLIES){
+						_id[_x] = 0;
+						moveTile(_id[_x], up);
+						if(_y > 0){
+							if(currentLevel[_y-1][_x] == 1) {
+								_id[_x] = 1;
+								SoundFX.change();
+								moveTile(buttons[_y-1][_x], bottom);
+							}
+							if(currentLevel[_y-1][_x] > 3 && currentLevel[_y-1][_x]< 8) {
+								SoundFX.march(36);SoundFX.move();
+								killed++;
+								moveTile(buttons[_y-1][_x], "center");
+							}
+							currentLevel[_y-1][_x] = 2;
+						} else {
+							if(currentLevel[height-1][_x] == 1){
+								currentLevel[0][_x] = 1;
+							} else if(currentLevel[height-1][_x] == 2 || currentLevel[height-1][_x] == 3){
+								if(currentLevel[height-2][_x] == 1){
+									currentLevel[0][_x] = 1;
+									mod[height-2][_x] = 2;
+								} else if(currentLevel[height-2][_x] == 2){
+									if(currentLevel[height-3][_x] == 1){
+										currentLevel[0][_x] = 1;
+										mod[height-3][_x] = 2;
+									} else if(currentLevel[height-3][_x] == 2){
+										if(currentLevel[height-4][_x] == 1){
+											currentLevel[0][_x] = 1;
+											mod[height-4][_x] = 2;
+										} else if(!currentLevel[height-4][_x]){
+											currentLevel[0][_x] = 1;
+											mod[height-4][_x] = 2;
+										}
+									}
+								}
+							}
+							mod[height-1][_x] = 3;
+						}
+					} else if(_id[_x]==3 && turn == ALLIES){
+						SoundFX.ui();
+					}
+					
+					if((_id[_x]==4 && turn == OPP) || (_id[_x]==5 && turn == FOES)){
+						_i = _id[_x]; _j = (_i==5)?4:5;
+						_id[_x] = 0;
+						moveTile(buttons[_y][_x], left);
+						if(_x > 0){
+							if(_id[_x-1] == _j) {
+								_id[_x] = _j;
+								SoundFX.change();
+								moveTile(buttons[_y][_x-1], right);
+							}
+							if(_id[_x-1] > 0 && _id[_x-1] < 4) {
+								SoundFX.hit(); SoundFX.move();
+								moveTile(buttons[_y][_x-1], "center");
+							}
+							_id[_x-1] = _i;
+						} else if(_id[_x]==6 && turn == FOES){
+							SoundFX.ui();
+						} else if(turn==OPP) {
+							if(_id[width-1] == 5) {
+								_id[width-2] = 5;
+								SoundFX.change();
+								moveTile(buttons[_y][width-1], right);
+							}
+							_id[width-1] = 4;
+						}
+					}
+					
+					
+				}
+			}*/
+			
+					/*if(currentLevel[_y][_x]==5 && turn == FOES){
+						currentLevel[_y][_x] = 0;
+						moveTile(buttons[_y][_x], left);
+						if(_x > 0){
+							if(currentLevel[_y][_x-1] == 4) {
+								currentLevel[_y][_x] = 4;
+								SoundFX.change();
+								moveTile(buttons[_y][_x-1], right);
+							}
+							if(currentLevel[_y][_x-1] > 0 && currentLevel[_y][_x-1] < 4) {
+								SoundFX.hit();SoundFX.move();
+								moveTile(buttons[_y][_x-1], "center");
+							}
+							currentLevel[_y][_x-1] = 5;
+						} else {
+							mod[_y][width-1] = 6;
+						}
+					} else if(currentLevel[_y][_x]==6 && turn == FOES){
+						SoundFX.ui();
+					}
+					if(currentLevel[_y][_x]==4 && turn == OPP){
+						currentLevel[_y][_x] = 0;
+						moveTile(buttons[_y][_x], left);
+						if(_x > 0){
+							if(currentLevel[_y][_x-1] == 5) {
+								currentLevel[_y][_x] = 5;
+								SoundFX.change();
+								moveTile(buttons[_y][_x-1], right);
+							}
+							if(currentLevel[_y][_x-1] > 0 && currentLevel[_y][_x-1] < 4) {
+								SoundFX.hit(); SoundFX.move();
+								moveTile(buttons[_y][_x-1], "center");
+							}
+							currentLevel[_y][_x-1] = 4;
+						} else {
+							if(currentLevel[_y][width-1] == 5) {
+								currentLevel[_y][width-2] = 5;
+								SoundFX.change();
+								moveTile(buttons[_y][width-1], right);
+							}
+							currentLevel[_y][width-1] = 4;
+						}
+					}*/
+		function nextMove(){//console.log(parseInt(performance.now()),"nextMove:", turn, turns)
+			idle=false; animating=true;
+			var mod = [];
+			for(var _y = 0; _y < height; _y ++){
+				mod.push([]);
+				for(var _x = 0; _x < width; _x ++){
+					mod[_y].push(0);
+				}
+			}
+			for(_y = 0; _y < height; _y ++){
+				for(_x = 0; _x < width; _x ++){
+					if(currentLevel[_y][_x]==2 && turn == ALLIES){
+						currentLevel[_y][_x] = 0;
+						moveTile(buttons[_y][_x], up);
+						if(_y > 0){
+							if(currentLevel[_y-1][_x] == 1) {
+								currentLevel[_y][_x] = 1;
+								SoundFX.change();
+								moveTile(buttons[_y-1][_x], bottom);
+							}
+							if(currentLevel[_y-1][_x] > 3 && currentLevel[_y-1][_x]< 8) {
+								SoundFX.march(36);SoundFX.move();
+								killed++;
+								moveTile(buttons[_y-1][_x], "center");
+							}
+							currentLevel[_y-1][_x] = 2;
+						} else {
+							if(currentLevel[height-1][_x] == 1){
+								currentLevel[0][_x] = 1;
+							} else if(currentLevel[height-1][_x] == 2 || currentLevel[height-1][_x] == 3){
+								if(currentLevel[height-2][_x] == 1){
+									currentLevel[0][_x] = 1;
+									mod[height-2][_x] = 2;
+								} else if(currentLevel[height-2][_x] == 2){
+									if(currentLevel[height-3][_x] == 1){
+										currentLevel[0][_x] = 1;
+										mod[height-3][_x] = 2;
+									} else if(currentLevel[height-3][_x] == 2){
+										if(currentLevel[height-4][_x] == 1){
+											currentLevel[0][_x] = 1;
+											mod[height-4][_x] = 2;
+										} else if(!currentLevel[height-4][_x]){
+											currentLevel[0][_x] = 1;
+											mod[height-4][_x] = 2;
+										}
+									}
+								}
+							}
+							mod[height-1][_x] = 3;
+						}
+					} else if(currentLevel[_y][_x]==3 && turn == ALLIES){
+						SoundFX.ui();
+					}
+					
+					if((currentLevel[_y][_x]==4 && turn == OPP)||(currentLevel[_y][_x]==5 && turn == FOES)){
+						var _i = currentLevel[_y][_x];
+						var _j = (_i==5)?4:5;
+						currentLevel[_y][_x] = 0;
+						moveTile(buttons[_y][_x], left);
+						if(_x > 0){
+							if(currentLevel[_y][_x-1] == _j) {
+								currentLevel[_y][_x] = _j;
+								SoundFX.change();
+								moveTile(buttons[_y][_x-1], right);
+							}
+							if(currentLevel[_y][_x-1] > 0 && currentLevel[_y][_x-1] < 4) {
+								SoundFX.hit(); SoundFX.move();
+								moveTile(buttons[_y][_x-1], "center");
+							}
+							currentLevel[_y][_x-1] = _i;
+						} else if(_i==5){
+							mod[_y][width-1] = 6;
+						} else {
+							death = turns;
+							SoundFX.dead();
+							wait(function(){message("\rYou must prevent the enemy captain\rfrom reaching the battle horizon.\r\r", " Restart ");}, getAnim(5));
+							return;
+						}
+					} else if(currentLevel[_y][_x]==6 && turn == FOES){
+						SoundFX.ui();
+					}
+				}
+			}
+			for(_y = 0; _y < height; _y ++){
+				for(_x = 0; _x < width; _x ++){
+					if(mod[_y][_x]==3 && turn == ALLIES){
+						currentLevel[_y][_x] = 2;
+					} else if(mod[_y][_x]==6 && turn == FOES){
+						currentLevel[_y][_x] = 5;
+					}
+				}
+			}
+			if(turn==ALLIES) {SoundFX.march(8);}
+			wait(function(){
+				killAll(area);
+				//if(turn==ALLIES) SoundFX.move();
+				if((turn==OPP&&enmX>-1) || turn==FOES) SoundFX.march(-8);
+				if(turn==FOES || turn==ALLIES) turns++;
+				turn = (turn==ALLIES)?((enmX>-1)?OPP:FOES):((turn==OPP)?FOES:PLR);
+				updateUI();
+				createGrid(currentLevel, (turn==FOES||turn==OPP)?nextMove:null);
+			}, getAnim(2.25));
+			if(animating) wait(function(){
+				animating = false;
+			}, getAnim(10));
+		}
+		
+		function message(_text, _label, _size, _leading){
+			killAll(messbtn);killAll(messtxt);
+			mess.removeEventListener("click", messClick);
+			TweenFX.to(messtxt, anim, {alpha:1, scale:1, x:8});
+			TypeFX.drawText(messtxt, _text, _size || 5, _leading || 12);
+			mess.style.pointerEvents = "auto";
+			if(_label){
+				mess.className = "central mess large";
+				messbtn.id = _label.split("|").join("").split("!").join("").replace(/\s/g, "").toLowerCase();
+				if(messbtn.id=="nextstage") SoundFX.victory(0);
+					else if(messbtn.id=="prepare") SoundFX.ui();
+					else SoundFX.mess();
+				TypeFX.drawText(messbtn, _label, 5);
+				messbtn.style.width = (TweenFX.getStyle(messbtn, "width")+2)+"px";
+				mess.style.top = "0";
+				mess.style.width = "920px";
+				messbtn.parentNode.style.visibility = "visible";
+				mess.style.cursor = "default";
+				TweenFX.to(fade, anim, {alpha:0.75});
+			} else {
+				mess.className = "central mess custom";
+				messbtn.parentNode.style.visibility = "hidden";
+				mess.style.width = (TweenFX.getStyle(messtxt, "width")+40)+"px";
+				mess.style.top = topscore.style.height;
+				mess.style.cursor = "pointer";
+				mess.addEventListener("click", messClick);
+			}
+			mess.style.height = (TweenFX.getStyle(messtxt, "height")+((_label)?60:0))+"px";
+			TweenFX.to(mess, anim*2, {alpha:((_label)?0.95:0.75)});
+		}
+		
+		function messClick(){
+			var _w = parseInt(mess.style.width);
+			TweenFX.to(mess, anim*2, {height:(_w<100)?(TweenFX.getStyle(messtxt, "height")):60, width:(_w<100)?TweenFX.getStyle(messtxt, "width")+40:80});
+			TweenFX.to(messtxt, anim*2, {alpha:(_w<100)?1:0, scale:(_w<100)?1:.1, x:(_w<100)?8:-120});
+		}
+		
+		function updateUI(_n, _begin){if(_n/*&&!online*/) _n = 1; else _n = 0;
+			////console.log("updateUI", _n, lvl);
+			var pos = [PLR, ALLIES, OPP, FOES];
+			var tur = ["Plr >","Ally >",((enmX>-1)?"Opp >":"-|-|-|>"),((enms>0)?((enms>1)?"Foes >":"||Foe |> "):" -|-|-||>||")];
+			tur.push(tur[0]);tur.push(tur[1]);tur.push(tur[2]);tur.push(tur[3]);
+			killAll(bottomTxt);
+			score = 0;
+			var mins = 0;
+			for(i = 0; i < completed.length; i++){
+				if(i<lvl) score += ((completed[i]<2)?0:((completed[i]<3)?25:50));
+			}
+			for(i = 0; i < tempturns.length; i++){//if(i<lvl+_n)//console.log(i,tempturns[i],minturns[i]);
+				mins += minturns[i]*2;
+				if(i<lvl) score += ((tempturns[i]<=mins)?50:0);
+			}
+			score+=(frags+killed)*10;//((!_n)?frags*10:(frags+killed)*10);
+			//console.log("updateUI frags:"+frags, killed, score);
+			TypeFX.drawText(bottomTxt, (((plrs==1)?"[ |-  - ":((plrs==2)?"[|[ |-|":"[[["))+"  stage "+((lvl+1-_n<10)?"0":"")+((lvl-_n>0)?(lvl+1-_n):1)+"   frags "+(((frags+killed)<10)?"0":"")+(frags+killed)+"  ||turns "+((turns+_n<20)?"00":((turns+_n<200)?"0":""))+parseInt((turns+_n)/2)+"   score |"+((score>999)?score:((score>99)?"0"+score:((score>9)?"00"+score:"000"+score)))+"  |=>|" + ((_begin) ? "> >||  get ready !!!  ||< <|<" : (tur[pos.indexOf(turn)]) + (tur[pos.indexOf(turn)+1]) + (tur[pos.indexOf(turn)+2]) + (tur[pos.indexOf(turn)+3]))).toUpperCase()+"=", 2);
+		}
+		
+		function writeHistory(_level, _value){//console.log("writeHistory", lvl, _level, _value);
+			if(online) {
+				writeHistoryLine("m", sound);
+				if(anim!=5) writeHistoryLine("a", anim);
+				writeHistoryLine("l"+_level, _value);
+				writeHistoryLine("l", (lvl==-1)?0:_level+1);
+				emptyArrays();
+				updateTurns();
+				updateFrags(lvl);
+				updateLevel()
+			}
+		}
+		function writeHistoryLine(l,v){
+			window.history.replaceState("", "", updateURLParameter(window.location.href, l, v));
+		}
+		function emptyArrays(){
+			tempturns = empty.slice();
+			tempfrags = empty.slice();
+			completed = array.slice(); completed[0] = 0;
+			turns = kills = frags = 0;
+		}
+		function clearProgress(){//console.log(performance.now(),'clearProgress');
+			emptyArrays();
+			death = lvl = 0;
+			if(online){
+				window.history.pushState("", "", "/games/FormationAbsent/" );
+			}
+			mainMenu();
+		}
+		
+		
+		function soundChange(){
+			sound += 1;
+			if(sound>2) sound = 0;
+			updateMenu();
+			SoundFX.ui();
+		}
+		
+		function wait(_callback, _delay){////console.log("wait:"+_delay)
+			var begin = parseInt(performance.now()), now;
+			delayFunction();
+			function delayFunction(){
+				if(!gameState) return;
+				now = parseInt(performance.now());////console.log(now , begin, now - begin);
+				if(now - begin < _delay){
+					window.requestAnimationFrame(delayFunction);
+				}
+				else _callback();
+			}
+		}
+		
+		
+		
+		
+		
+		function createListFunction(callback) {
+			return function() {
+				for (i = 0; i < arguments.length; i++) {
+					if (arguments[i]) {
+						callback(arguments[i], i);
+					}
+				}
+			}
+		}
+		var kill = createListFunction(function(result, i) {
+			if (result.parentNode) {
+				result.parentNode.removeChild(result);
+			}
+		})
+		var killAll = function(child) {
+			while(child.firstChild){
+				kill(child.firstChild);
+			}
+		}
+		
+		
+		
+		
+		var SoundFX = (function() {
+			var soundContext = new (window.AudioContext || window.webkitAudioContext)();
+			var oscTypes = ["square", "sawtooth", "triangle", "sine"];// sine is the oscillator's default, but we use square as default
+			var volume = 1;
+			
+			function playSound(_freq, _incr, _delay, _times, _vol, _type){
+				
+				var oscillator = soundContext.createOscillator(); // instantiate oscillator
+				oscillator.frequency.value = _freq;
+				oscillator.type = oscTypes[_type || 0];
+				
+				var modulationGain = soundContext.createGain();
+				modulationGain.gain.value = 0;
+				
+				oscillator.connect(modulationGain);
+				modulationGain.connect(soundContext.destination);
+				oscillator.start();
+				
+				var i = 0;
+				var interval = setInterval(playTune, _delay);
+				
+				function playTune(){
+					oscillator.frequency.value = _freq + _incr * i;
+					modulationGain.gain.value = (1-(i/_times)) * _vol * volume;
+					i ++;
+					if(i > _times) {
+						clearInterval(interval);
+						setTimeout(stopTune, (_delay+_times)*2); // prevents the clicky-glitch sound when stopping the oscillator
+					}
+				}
+				function stopTune(){
+					oscillator.stop();
+				}
+			}
+			return{
+				playSound:playSound,
+				getVolume:function(){
+					return _volume;
+				},
+				setVolume:function(_volume){
+					volume = _volume;
+				},
+				main:function(){// begin game
+					playSound(-120, 25, 25, 30, 0.01*sound, 1);
+					playSound(240, -45, 35, 20, 0.02*sound, 2);
+					setTimeout(function(){playSound(45, 50, 25, 25, 0.02*sound, 2);}, 150);
+					setTimeout(function(){playSound(25, 40, 35, 18, 0.01*sound, 2);}, 260);
+				},
+				ui:function(){
+					playSound(420, 6, 15, 10, 0.01*sound, 3);
+				},
+				close:function(){
+					playSound(100, -2, 5, 15, 0.01*sound, 1);
+					playSound(100, -15, 15, 15, 0.05*sound, 2);
+				},
+				move:function(){
+					playSound(100, -5, 20, 15, 0.01*sound, 1);
+					playSound(100, -5, 25, 25, 0.1*sound, 3);
+				},
+				mess:function(){
+					bb(10); bb(140); bb(280);
+					function bb(_t){
+						setTimeout(function(){
+							playSound(150-_t*.75, -15, 15, 10, (0.03-_t/10000)*sound,2);
+							playSound(320, 5, 15, 5, (0.04-_t/8000)*sound, 3);
+						}, _t);
+					}
+				},
+				victory:function(_n){
+					bb(5, 150, 20, 12); bb(140, 150, 20, 12); bb(280, 150, 20, 12);
+					bb(400, 198, 20, 15); bb(675, 178, 25, 12); bb(780, 198, 50, 20);
+					function bb(_t, _f, _c, _d){
+						setTimeout(function(){
+							playSound(_f, _n||1, _c, _d, 0.02*sound, 2);
+							playSound(_f, _n||1, _c, _d, 0.02*sound, 3);
+							playSound(_f*2, _n||1, _c, _d/2, 0.003*sound);
+							playSound(_f*2, _n||1, _c, _d/2, 0.005*sound, 1);
+						}, _t);
+					}
+				},
+				march:function(_n){
+					playSound(125, _n, 15, 25, 0.01*sound, 1);
+					function bb(_t){
+						setTimeout(function(){
+							playSound(100, _n, 15, 15, (0.06-_t/8000)*sound, 3);
+						}, _t);
+					}
+					bb(50); bb(140); bb(230); bb(320); bb(400);
+				},
+				dead:function(){
+					dd();
+					setTimeout(dd,120); setTimeout(dd,220);
+					setTimeout(function(){playSound(92,-2,15,25,0.2*sound,2);},340);
+					function dd(){ playSound(100,-2,10,25,0.2*sound,2); }
+				},
+				hit:function(){
+					setTimeout(function(){playSound(100,-2,10,25,0.1*sound,2);},180);
+					setTimeout(function(){playSound(120,-5,15,25,0.1*sound,2);},60);
+					playSound(110, -10, 20, 15, 0.01*sound);
+				},
+				change:function(){
+					playSound(200, 40, 25, 15, 0.01*sound, 2);
+					playSound(200, 40, 25, 15, 0.01*sound, 2);
+					playSound(160, 40, 20, 20, 0.01*sound, 1);
+				}
+			}
+		})();
+		
+		var TypeFX = (function() {
+			var symbols=[
+				// 32 empty characters will be added here with Array.unshift
+				
+				[[,,,5],[,6]],																// ! (33)
+				[[,,,2], [2,,,2]],															// " (34)
+				
+				[[,,3], [,,,3], [4,6,3], [6,4,,3], [4,,3], [6,1,,2], [,4,,3], [1,6,2], [2,2], [4,4], [2,4],[4,2]],	// #
+				[[,2,2], [2,1], [3], [4,,,7], [3,6], [2,5], [,4,2], [,3]],					// $
+				[[,1,,5], [1,1], [1,5], [2,1,,5]],											// %
+				[],										// & // treasure
+				
+				[[,,,2]],																	// ' (39)
+				[[,2,,3], [1,1], [1,5], [2], [2,6]],										// ( (40)
+				[[2,2,,3], [1,1], [1,5], [], [,6]],											// ) {41}
+				[[,2], [,4], [1,3,3], [2,1,,5], [4,2], [4,4]],								// * (42)
+				[[,3,5], [2,1,,5]],															// + (43)
+				[[1,6,,2], [,8]],															// , (44)
+				[[,3,5]],																	// -
+				[[,6]],																		// .
+				[[,6], [1,4,,2], [2,3], [3,1,,2], [4]],										// / (47)
+				
+				
+				[[1,,3], [,1,,5], [1,6,3], [4,1,,5], [1,4], [2,3], [3,2]],					// 0 (48)
+				[[1,1], [2,,,6], [1,6,3]],													// 1
+				[[,1], [1,,3], [4,1,,2], [3,3], [2,4], [1,5], [,6,5]],						// 2
+				[[,1], [1,,3], [4,1,,2], [4,4,,2], [,5], [1,6,3], [2,3,2]],					// 3
+				[[,3], [1,2], [2,1], [,4,5], [3,,,7]],										// 4
+				[[,,5], [,1], [,2,4], [4,3,,3], [,5], [1,6,3]],								// 5
+				[[1,,3], [4,1], [,1,,5], [1,6,3], [1,3,3], [4,4,,2]],						// 6
+				[[,,5], [4,1,,2], [3,3,,2], [2,5,,2]],										// 7
+				[[1,,3], [,1,,2], [4,1,,2], [,4,,2], [4,4,,2], [1,3,3], [1,6,3]],			// 8
+				[[1,,3], [,1,,2], [1,3,3], [4,1,,5], [1,6,3], [,5]],						// 9 (57)
+				
+				[[,1], [1,2], [2,3], [3,5], [3,4,2], [5,,3], [5,1,3], [5,-1], [9,5],  [5,3,5], [6,4,3], [6,5,3], [5,6], [7,6,2], [4,7,2], [8,7,3]],
+																							// : // enemy icon (58)
+				[],																			// ; // enemy icon dublicate (59)
+				[[4,3], [5,2], [5,4], [6,1], [6,5]],										// < // move left (60)
+				[[1,-1,3],[],[4,,2],[6,1,2],[7,2,2],[10,2,,2],[8,4,3],[11,5],[11,7],[1,3,,2], [,2], [2,3], [3,5], [4,6,2], [6,7,2], [8,8,3]],
+																							// = // exchange icon (61)
+				[[6,3], [5,2], [5,4], [4,1], [4,5]],										// > // move right (62)
+				[[,1], [1,,3], [4,1,,2], [3,3], [2,4], [2,6]],								// ?
+				[[2,,4],[,2,,4],[7,2,,4],[2,7,4],[3,2,2],[2,3,,2],[3,5,2], [1,1],[6,1],[1,6],[6,6]],//(C) copyright sign
+				
+				[[,1,,6], [4,1,,6], [1,,3], [,3,4]],										// A (65)
+				[[,,4], [,,,7], [,3,4], [,6,4], [4,1,,2], [4,4,,2]],						// B
+				[[1,,3], [,1,,5], [1,6,3], [4,5], [4,1]],									// C
+				[[,,,7], [,,4], [,6,4], [4,1,,5]],											// D
+				[[,,5], [,3,4], [,6,5], [,,,7]],											// E
+				[[,,5], [,3,4], [,,,7]],													// F (70)
+				[[1,,3],[,1,,5], [1,6,3], [4,5], [3,4,2], [4,1]],							// G
+				[[,,,7], [4,,,7], [1,3,3]],													// H
+				[[,,3], [,6,3], [1,1,,5]],													// I
+				[[4,,,6], [1,6,3], [,5]],													// J
+				[[,,,7], [1,3], [2,2], [2,4], [3,1], [4], [3,5], [4,6]],					// K (75)
+				[[,,,7], [1,6,4]],															// L
+				[[,,,7], [1,2], [3,2], [2,3], [4,,,7]],										// M
+				[[,,,7], [1,2], [2,3], [3,4], [4,,,7]],										// N
+				[[1,,3], [,1,,5], [1,6,3], [4,1,,5]],										// O
+				[[,,,7], [,,4], [,3,4], [4,1,,2]],											// P
+				[[1,,3], [,1,,5], [1,6,3], [4,1,,5], [4,7]],								// Q (81)
+				[[,,,7], [,,4], [,3,4], [4,1,,2], [4,4,,3]],								// R
+				[[1,,4], [,1,,2], [1,3,3], [4,4,,2], [,6,4]],								// S
+				[[,,5], [2,,,7]],															// T
+				[[,,,6], [1,6,3], [4,,,6]],													// U (85)
+				[[,,,3], [4,,,3], [1,3,,2], [3,3,,2], [2,5,,2]],							// V
+				[[,,,7], [1,5], [2,4], [3,5], [4,,,7]],										// W
+				[[,,,2], [4,,,2], [,5,,2], [4,5,,2], [1,2], [3,2], [2,3], [1,4], [3,4]],	// X
+				[[,,,2], [4,,,2], [1,2], [3,2], [2,3,,4]],									// Y
+				[[,,5], [,6,5], [,5], [1,4], [2,3], [3,2], [4,1]],							// Z (90)
+				
+				[[4,,3], [4,1,3], [5,-1], [8,2,3], [0,2], [1,3], [8,4,3], [9,5], [2,4], [3,3,8], [4,4,3], [4,5,3], [3,6], [7,6], [2,7,2], [7,7,2]],
+																							// [ // player icon
+				[[,1],[1,2],[2,3],[1,4],[,5]],												// \
+				[],																			// ] // player icon dublicate
+				[[3,4], [4,3], [5,2], [6,3], [7,4]],										// ^ // move up
+				[[5,7,2], [6,6], [9,3,2], [8,4,2], [7,5,4], [8,6,2], [9,7,2], [1,7,2], [3,6,2], [5,5], [6,4], [7,2,,2], [8,,,3], [10,2], [,4,3], [1,3,2], [1,2,2], [5,-1], [7,-1,,2], [3]],
+																							// _ //attack enemy icon
+				[[3,2], [4,3], [5,4], [6,3], [7,2]],										// ` // move down
+				
+				[[1,2,2], [1,4,2], [1,6,2], [,5], [3,3,,4]],										// a (97)
+				[[,,,7], [,2,3], [,6,3], [3,3,,3]],											// b
+				[[,3,,3], [1,2,2], [1,6,2], [3,3], [3,5]],									// c
+				[[3,,,7], [1,2,2], [1,6,2], [,3,,3]],										// d (100)
+				[[1,2,2], [,3,,3], [1,6,2], [3,3], [,4,4]],									// e
+				[[1,1,,6], [,3,3], [2]],													// f
+				[[1,2,2], [,3,,3],[1,6,2], [3,2,,6], [1,8,2]],								// g (103)
+				[[,,,7], [,2,3], [3,3,,4]],													// h
+				[[1,2,,5], [1], [,2]],														// i
+				[[1,2,,5], [1], [,2], [,7]],												// j
+				[[,,,7], [1,4], [2,3], [2,5], [3,2], [3,6]],								// k
+				[[,,,6], [1,6]],															// l
+				[[,2,,5], [2,3,,4], [4,3,,4], [,2,4]],										// m
+				[[,2,,5], [3,3,,4], [,2,3]],												// n (110)
+				[[1,2,2], [,3,,3], [1,6,2], [3,3,,3]],										// o
+				[[,2,3], [,2,,7],[,6,3], [3,3,,3]],											// p
+				[[1,2,2], [3,2,,7],[1,6,2], [,3,,3]],										// q
+				[[,2,,5], [1,3], [2,2,2]],													// r
+				[[1,2,3], [1,4,2], [,6,3], [,3], [3,5]],									// s
+				[[1,,,6], [,2,3], [2,6]],													// t (116)
+				[[,2,,4], [1,6,2], [3,2,,4]],												// u
+				[[,2,,5], [3,2,,3], [1,6], [2,5]],											// v
+				[[,2,,4], [2,2,,4], [4,2,,4], [1,6], [3,6]],								// w
+				[[,2,,2], [1,4,2], [3,2,,2], [,5,,2], [3,5,,2]],							// x
+				[[,2,,4],[1,6,2], [3,2,,6], [1,8,2]],										// y
+				[[,2,4], [3,3], [1,4,2], [,5], [,6,4]],										// z (122)
+				
+				[[,2],[1,3],[2,4],[,4],[2,2]],// sound )	// {
+				[],// space //[[1,,,9]],					// |
+				[[2,2,,3], [1,1], [1,5]]// sound x			// }
+			], spaces = [], i, j, k, h, w;
+			for(i = 0; i < 33; i++) symbols.unshift([]);
+			symbols[59] = symbols[58].slice();
+			symbols[93] = symbols[91].slice();
+			for(i = 0; i < symbols.length; i++) {
+				if(i==124) spaces.push(0); else if(i==33 || i==39 || i==46) spaces.push(1);
+				else if([32,44,105,106,108].indexOf(i) >- 1) spaces.push(2);
+				else if([34,37,40,41,73,102,116,123,125,92].indexOf(i) > -1) spaces.push(3);
+				else if(i>96 && i!=109 && i!=119) spaces.push(4);
+				else if((i>90&&i<97&&i!=92)||(i>57&&i<63)||i==38) spaces.push(12);
+				else if(i==64 || i==35) spaces.push(8); else spaces.push(5);
+			}
+			
+			function drawDiggit(_element, _diggit, _size, _color){
+				if(!parseInt(_diggit)) _diggit = _diggit.charCodeAt(0);
+				if(!_color) _color = "white";
+				if(!_size) _size = 1;
+				var canvas = _element.nodeName.toLowerCase();
+				if(canvas == "canvas"){
+					canvas = _element;
+				} else {
+					canvas = document.createElement("canvas");
+				}
+				canvas.width = _size * spaces[_diggit];
+				canvas.height = _size * 10;
+				drawGlyph(canvas, _diggit, _size, _color);
+				if(canvas!=_element) _element.appendChild(canvas);
+				return canvas;
+			}
+			
+			function drawGlyph(canvas, _diggit, _size, _color){
+				var context = canvas.getContext("2d");
+				context.fillStyle = _color;
+				if(symbols[_diggit]){
+					for(i = 0; i < symbols[_diggit].length; i++){
+						if(symbols[_diggit][i].length == 4) {
+							h = symbols[_diggit][i][3]; w = 1;
+						} else if(symbols[_diggit][i].length == 3) {
+							w = symbols[_diggit][i][2]; h = 1;
+						} else {w = 1; h = 1;}
+						context.beginPath();
+						context.rect(symbols[_diggit][i][0]*_size||0, ((symbols[_diggit][i][1]||0)+1)*_size, w*_size, h*_size);
+						context.fill();
+					}
+				}
+			}
+			
+			function drawText(_element, _text, _size, _leading, _color){
+				var _letter;
+				var lines = _text.split("\r");
+				var widths = [];
+				for(k = 0; k < lines.length; k++){
+					widths.push(0);
+					for(j = 0; j < lines[k].length; j++){
+						_letter = drawDiggit(_element, lines[k].charCodeAt(j), _size, _color);
+						_letter.style.position = "absolute";
+						_letter.style.left = widths[k]+"px";
+						_letter.style.top = (k) ? (k*_size*10 + (k*_leading||0))+"px" : 0;
+						dontSelect(_letter);
+						widths[k] += _letter.width + _size;
+					}
+				}
+				_element.style.width = Math.max.apply(this, widths)+"px";
+				_element.style.height = (lines.length*_size*10 + (lines.length*_leading||0))+"px";
+			}
+			
+			return{
+				symbols:symbols,
+				drawDiggit:drawDiggit,
+				drawGlyph:drawGlyph,
+				drawText:drawText
+			}
+		})();
+		
+		
+		var TweenFX=(function(){ var _1,_2=/[+-]?\d+(\.\d+)?/g,_3=["alpha","opacity","left",up,"right","bottom","width","height","x","y"],_4=["rotate","scale","scaleX","scaleY"],_5=[],_6=[]; function tweenTo(_7,_8,_9,_a,_b){ var i,_d=0,_e,_f,_10=[],_11; for(_e in _9){ if(_3.indexOf(_e)>-1){ if(_e=="x"){ _f=_3[2]; }else{ if(_e=="y"){ _f=_3[3]; }else{ if(_e==_3[0]){ _f=_3[1]; }else{ _f=_e; } } } if(_f==_3[1]&&_9[_e]>0){ if(_7.style.visibility=="hidden"){ _7.style.opacity="0"; } _7.style.visibility="visible"; } _10.push({property:_f,start:getStyle(_7,_f),end:_9[_e]}); }else{ if(_4.indexOf(_e)>-1){ if(!_11){ _11=getTransform(_7); } } } } if(_11){ for(i=0;i<_4.length;i++){ _e=_4[i]; _f=_9.hasOwnProperty(_e); if(_e==_4[1]){ if(_f){ _10.push({property:_4[2],start:_11[_4[2]],end:_9[_e]}); _10.push({property:_4[3],start:_11[_4[3]],end:_9[_e]}); i+=2; } }else{ _10.push({property:_e,start:_11[_e],end:(_f)?_9[_e]:_11[_e]}); } } } stopTween(_7); if(_10.length){ _6.push(requestAnimationFrame(tween)); _5.push(_7); } function tween(){ if(!_1){ _d+=1; _11=""; for(i=0;i<_10.length;i++){ if(_10[i].start==_10[i].end){ _f=_10[i].end; }else{ if(_10[i].start>_10[i].end){ _e=_10[i].end+(_10[i].start-_10[i].end)/_8*(_8-_d); }else{ _e=_10[i].start-(_10[i].start-_10[i].end)/_8*_d; } _f=((_d>=_8)?_10[i].end:_e); } _f+=((_3.indexOf(_10[i].property)>1)?"px":((!_4.indexOf(_10[i].property))?"deg":"")); if(_3.indexOf(_10[i].property)>-1){ _7.style[_10[i].property]=_f; }else{ _11+=_10[i].property+"("+_f+") "; } } if(_11.length){ _7.style.transform=_11; } if(_d>=_8){ if(_7.style.opacity=="0"){ _7.style.visibility="hidden"; } stopTween(_7); if(_a){ _a.apply(this,_b); } return; } } i=_5.indexOf(_7); if(i>-1){ _6[i]=requestAnimationFrame(tween); } } function getTween(_el){ if(!_el){ return _5.length; } return _5.indexOf(_el); } function stopTween(_el,_id){ if(_el){ _id=getTween(_el); } if(_id>-1){ cancelAnimationFrame(_6.splice(_id,1)); _5.splice(_id,1); } return _id; } function removeAllTweens(){ for(var _id=_5.length-1;_id>0;_id--){ stopTween(null,_id); } } } function getStyle(_16,_17){ return 1*((window.getComputedStyle(_16,null).getPropertyValue(_17).match(_2)||[0]).map(function(v){ return 1*v; })); } function getTransform(_19,_1a){ var _1b=window.getComputedStyle(_19,null).getPropertyValue("transform").replace("matrix(","").replace("matrix3d(","").replace(")","").split(", "); if(_1b.length==16){ _1b=[_1b[0],_1b[1],_1b[4],_1b[5]]; }else{ if(_1b.length<6){ _1b=[1,0,0,1]; } } if(_1a){ return getTransformObject(_1b)[_1a]; } return getTransformObject(_1b); } function getTransformObject(a){ return {scaleX:Math.sqrt(Math.pow(a[0],2)+Math.pow(a[1],2)),scaleY:Math.sqrt(Math.pow(a[2],2)+Math.pow(a[3],2)),rotate:(180/Math.PI)*Math.atan2(a[3],a[2])-90}; } return {to:function(_1d,_1e,_1f,_20){ tweenTo(_1d,_1e,_1f,_20,Array.apply(null,arguments).slice(4)); },pause:function(_p){ if(arguments.length){ if(_p||_p===false){ _1=_p; } }else{ _1=!_1; } return _1; },stop:function(_22){ if(stopTween(_22)==-1){ removeAllTweens(); } },tweenedElements:_5,getStyle:getStyle,getTransform:getTransform}; })();
+	</script>
+	
+</div>
+
+</body>
+
+</html>
