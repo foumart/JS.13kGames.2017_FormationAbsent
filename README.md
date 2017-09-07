@@ -13,7 +13,7 @@ Formation Absent is turn-based puzzler made for 13 kilobytes JavaScript Game Jam
 
 Preview:
 
-![Game Screenshots](http://www.foumartgames.com/games/FormationAbsent/preview.gif)
+![Game Screenshots](http://www.foumartgames.com/games/FormationAbsent/animated_preview.gif)
 
 ### Post-Compo Link: http://www.foumartgames.com/games/FormationAbsent/
 
