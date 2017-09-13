@@ -270,10 +270,8 @@
 		var bb = border+"Bottom";
 		var br = border+"Right";
 		var bl = border+"Left";
-		var addEvent = "addEventListener";
-		var parentNode = "parentNode";
-		window[addEvent]("load", init, false);
-		window[addEvent]("resize", onResize, false);
+		window.addEventListener("load", init, false);
+		window.addEventListener("resize", onResize, false);
 		
 		var searchbar;
 		
@@ -398,7 +396,7 @@
 			return h + _add;
 		}
 		
-		function init() {
+		function init() {//SoundFX.victory();return
 			online = window.location.protocol.substring(0,4)=="http";
 			if(sound==-1) sound = (/chrome/i.test( navigator.userAgent )) ? 2 : 0;
 			searchbar = {}; 
@@ -428,14 +426,15 @@
 				TweenFX.to(bgr0, anim/2, {alpha:0.05});
 			});
 			onResize();
-			bottomTxt[addEvent]("click", genUIclick);
-			document[addEvent]("keydown", respondKey);
+			bottomTxt.addEventListener("click", genUIclick);
+			document.addEventListener("keydown", respondKey);
+			levelsbtns.addEventListener("dblclick", enterFullScreen);
 		}
 		
 		function respondKey(e){
 			var t = {id:""};
-			var m = (messbtn[parentNode].style.visibility == "visible" && mess.style.opacity != "0");
-			if(bottomTxt.style.pointerEvents == "auto" || ((m||!gameState) && e.keyCode!=13)) return;// in generator or mess
+			var m = (messbtn.parentNode.style.visibility == "visible" && mess.style.opacity != "0");
+			if(bottomTxt.style.pointerEvents == "auto" || ((m||!gameState) && e.keyCode!=13 && e.keyCode!=70)) return;// in generator or mess
 			//if(bottomTxt.style.pointerEvents == "auto" && e.keyCode!=13) return;
 			switch (e.keyCode) {
 				case 27: // esc
@@ -461,6 +460,9 @@
 					if(gameState<3) return;
 					if((buttons[plrY][plrX].div.style.pointerEvents != "none" && lvl && !m) || (!lvl && turns==9)) moveClick({target:t});
 					break;
+				case 70:
+                    enterFullScreen();
+					break;
 				case 13: // Enter
 					if(closediv.style.visibility == "hidden") messSelect(1);
 					if(m) proceedClick();
@@ -471,11 +473,21 @@
 			}
 			if(t.id.length>0 && t.style.pointerEvents != "none") moveClick({target:t});
 		}
-		
+		function enterFullScreen(e){
+            var d = document.documentElement;
+            if (!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement)) {
+                (d.requestFullscreen || d.mozRequestFullScreen || d.webkitRequestFullScreen || d.msRequestFullscreen).call(d);
+            } else {
+                if(document.exitFullscreen) document.exitFullscreen();
+                else if(document.mozCancelFullScreen) document.mozCancelFullScreen();
+                else if(document.webkitCancelFullScreen) document.webkitCancelFullScreen();
+                else if(document.msExitFullscreen) document.msExitFullscreen();
+            }
+        }
 		function onResize(evt){
-			window.requestAnimationFrame(function(){
+			//window.requestAnimationFrame(function(){
 				Resize(evt);
-			});
+			//});
 		}
 		function trans(_el, _s, _p, _s1){
 			_el.style.transform = "scale"+((_s1) ? ("("+_s+","+_s1+")") : ((_p!=null)?_p:"")+"("+_s+")");
@@ -563,12 +575,12 @@
 			TypeFX.drawText(practicebtn, (lvl<1)?"Tutorial    ":((score)?"Replay ("+(lvl+1)+")":"Continue")+"    ", 4);
 			
 			TypeFX.drawText(versusbtn, "Resume Game    ", 4);
-			versusbtn[parentNode].style.opacity = ((!currentLevel||death||lvl<=0)?"0.25":"1");
-			setPointer(versusbtn[parentNode], (currentLevel && !death && lvl>0));
+			versusbtn.parentNode.style.opacity = ((!currentLevel||death||lvl<=0)?"0.25":"1");
+			setPointer(versusbtn.parentNode, (currentLevel && !death && lvl>0));
 			
 			TypeFX.drawText(multibtn, "Clear||Progress||   ", 4);
-			multibtn[parentNode].style.opacity = ((lvl<=0)?"0.25":"1");
-			setPointer(multibtn[parentNode], lvl>0);
+			multibtn.parentNode.style.opacity = ((lvl<=0)?"0.25":"1");
+			setPointer(multibtn.parentNode, lvl>0);
 			
 			TypeFX.drawText(soundbtn, ((!sound)?"  $|{ " : ((sound==1)?"  $|} ":"  $})")), 4);
 			var tmp = String.fromCharCode(92);
@@ -577,7 +589,7 @@
 				newbtn.id = "btn_"+i;
 				newbtn.style.position = "absolute";
 				newbtn.className = ((i==12)?"r":"y")+" bb i";
-				newbtn[addEvent]("click", (i<=12)?newbtnclick:genClick);
+				newbtn.addEventListener("click", (i<=12)?newbtnclick:genClick);
 				setPointer(newbtn, i==13 || !(completed[i]==-1&&online));
 				if(i>=12){
 					TypeFX.drawText(newbtn, ((i==12)?"  Stage||13   ":"  Custom|   "), 4);
@@ -875,7 +887,7 @@
 			_a[2] = ('width=' + _w + ',height=' + _h + ',' +_a[2]);
 			try{
 				var winobj = window.open.apply(this, _a);
-				winobj[addEvent]("load", winobj.focus, false);
+				winobj.addEventListener("load", winobj.focus, false);
 			} catch(err) {}
 		}
 		
@@ -904,7 +916,7 @@
 			} else if(messbtn.id=="tobattle"&&gameState>2){//console.log("proceedClick:tobattle", gameState, lvl, killed, frags, death)
 				SoundFX.close();
 				TweenFX.to(mess, anim*2, {alpha:0}, function(){
-					message("\r\rAdvice`move down\r\rAllies may need help. \r\r\r", null, 3, -15);	
+					message("\rAdvice`move down\rAllies may need help.\r", null, 3);	
 					TweenFX.to(mess, anim*2, {alpha:0.95}, function(){
 						idleClick();
 						setPointer(buttons[plrY+1][plrX].div, true);
@@ -917,8 +929,8 @@
 			}
 		}
 		
-		function isMess(){
-			return (Number(mess.style.opacity) && parseInt(mess.style.width)<400);//&& parseInt(mess.style.width)<400
+		function isMess(_chk){
+			return (Number(mess.style.opacity) && (_chk)?(parseInt(mess.style.width)>400):(parseInt(mess.style.width)<400));
 		}
 		
 		function closeGame(e){//console.log(parseInt(performance.now()),"closeGame", animating);
@@ -931,16 +943,16 @@
 			}
 		}
 		
-		function idleClick(e){//console.log(parseInt(performance.now()),'idleClick'+((e)?1:0),animating);
+		function idleClick(e){console.log(parseInt(performance.now()),'idleClick'+((e)?1:0),animating);
 			if(e){
 				if(animating || turn != PLR) return;
-				if((e.target[parentNode].firstChild.style.cursor=="pointer") || isMess() || bottomTxt.style.pointerEvents == "auto") return;
+				if((e.target.parentNode.firstChild.style.cursor=="pointer") || isMess(true) || bottomTxt.style.pointerEvents == "auto") return;
 			}
 			idle = !idle;
 			killAll(area);
 			createGrid(currentLevel, function(){if(idle) {
 				hilightButton(plrX, plrY, 1);
-				buttons[plrY][plrX].holder[addEvent]("click", idleClick);
+				buttons[plrY][plrX].holder.addEventListener("click", idleClick);
 			}});
 			
 		}
@@ -1089,7 +1101,7 @@
 						} else if(currentLevel[_y][_x]==5||currentLevel[_y][_x]==6){
 							enms++;
 						}
-						if(((gameState>3||turns>9)||lvl)) diggit.holder[addEvent]("click", idleClick);
+						if(((gameState>3||turns>9)||lvl)) diggit.holder.addEventListener("click", idleClick);
 					}
 					buttons[_y].push(diggit);
 				}
@@ -1099,7 +1111,7 @@
 				animating = false;
 				for(_y = 0; _y < height; _y ++){
 					for(_x = 0; _x < width; _x ++){
-						buttons[_y][_x].div[addEvent]("click", genBtnClick);
+						buttons[_y][_x].div.addEventListener("click", genBtnClick);
 						buttons[_y][_x].div.style.cursor = "pointer";
 						buttons[_y][_x].div.id = "btn_"+_x+"x"+_y;
 					}
@@ -1120,13 +1132,13 @@
 						var id = parseInt(turns/2)-1;
 						if(!idle || turns>8) TweenFX.to(mess, anim, {alpha:0}, function(){
 							if(TweenFX.getStyle(mess, "height")<400){
-								var msg = ["Exchange positions\r\r\rwith Allies to dodge \r\r\rupcoming Foes |=",
-								"Once||enemies||are |\r\r\ravoided, they'|re\r\r\rbecoming||a||pray.",
-								"When allies reach\r\r\rthe battle horizon\r\r\rthey're||respawned. ",
-								"Skip||any move||by\r\r\rclicking the main |\r\r\rsquared button.",
-								"You can also toggle\r\r\rcontrols||by||clicking \r\r\ron an empty area."][id];
+								var msg = ["Exchange positions\rwith Allies to dodge\rupcoming Foes |=",
+								"Once enemies are\ravoided, they'|re\rbecoming||the||pray.",
+								"When allies reach\rthe battle horizon\rthey're respawned.",
+								"Skip any move by\rclicking the main\rsquared button.",
+								"You can also toggle\rcontrols||by||clicking\ron an empty area."][id];
 								wait(function(){
-									message("\r\r"+msg+"\r\r\r\r", null, 3, -18);
+									message("\r"+msg+"\r", null, 3);
 									TweenFX.to(mess, anim, {alpha:0.9});
 									disableButtons([2,0,0,4,0][id]);
 								}, (!id)?getAnim(6):0);
@@ -1229,7 +1241,7 @@
 				}
 				
 				buttons[plrY][plrX].div.style[bradius] = "0";
-				buttons[plrY][plrX].div[addEvent]("click", moveClick);
+				buttons[plrY][plrX].div.addEventListener("click", moveClick);
 				buttons[plrY][plrX].div.style.cursor = "pointer";
 				
 				//try{
@@ -1263,8 +1275,8 @@
 			plr.div.style[b2] = "0";
 			TypeFX.drawDiggit(plr.canvas, d[1], 10);
 			TypeFX.drawDiggit(plr.bgr, d[1], 10, ((plr.div.className.indexOf("red")>-1)?"#611":"#242"));
-			setPointer(plr.div[parentNode], true);
-			plr.div[addEvent]("click", moveClick);
+			setPointer(plr.div.parentNode, true);
+			plr.div.addEventListener("click", moveClick);
 		}
 		
 		
@@ -1445,11 +1457,11 @@
 			TypeFX.drawText(messtxt, _text, _size || 5, _leading || 12);
 			setPointer(mess, true);
 			mess.className = "c mess "+((_label)?"l":"t");
-			messbtn[parentNode].style.visibility = (_label)?"visible":"hidden";
-			mess.style.width = ((_label)?920:(TweenFX.getStyle(messtxt, "width")+40))+"px";
-			mess.style.top = ((_label)?"0":"30px");
+			messbtn.parentNode.style.visibility = (_label)?"visible":"hidden";
+			mess.style.width = ((_label)?920:(TweenFX.getStyle(messtxt, "width")+60))+"px";
+			mess.style.top = ((_label)?"0":"26px");
 			mess.style.cursor = (_label)?"default":"pointer";
-			mess.style.height = (TweenFX.getStyle(messtxt, "height")+((_label)?60:0))+"px";
+			mess.style.height = (TweenFX.getStyle(messtxt, "height")+((_label)?60:-40))+"px";
 			if(_label){
 				messbtn.id = _label.split("|").join("").split("!").join("").replace(/\s/g, "").toLowerCase();
 				if(messbtn.id=="nextstage" || messbtn.id=="shareontwitter") SoundFX.victory(0);
@@ -1458,7 +1470,7 @@
 				TypeFX.drawText(messbtn, _label, 5);
 				TweenFX.to(fade, anim, {alpha:0.75});
 			} else
-				mess[addEvent]("click", messClick);
+				mess.addEventListener("click", messClick);
 			
 			TweenFX.to(mess, anim*2, {alpha:((_label)?0.95:0.75)});
 		}
@@ -1490,7 +1502,7 @@
 			}
 			//if(lvl>12) score = _n*100;
 			score+=(frags+killed)*10;
-			TypeFX.drawText(bottomTxt, (((plrs==1)?"[ |-  - ":((plrs==2)?"[|[ |-|":"[[["))+"  stage "+(((lvl+1<10)?"0":"")+((lvl>0)?(lvl+1):1))+"   frags "+(((frags+killed)<10)?"0":"")+(frags+killed)+"  ||turns "+((turns+_n<20)?"00":((turns+_n<200)?"0":""))+parseInt((turns+_n)/2)+"   score |"+((score>999)?score:((score>99)?"0"+score:((score>9)?"00"+score:"000"+score)))+"  |=>|" + ((_begin) ? "> >||  get ready !!!  ||< <|<" : (tur[pos.indexOf(turn)]) + (tur[pos.indexOf(turn)+1]) + (tur[pos.indexOf(turn)+2]) + (tur[pos.indexOf(turn)+3]))).toUpperCase()+"=", 2);
+			TypeFX.drawText(bottomTxt, (((plrs==1)?"[ |-  - ":((plrs==2)?"[|[ |-|":"[[["))+"  stage "+(((lvl+1<10)?"0":"")+((lvl>0)?(lvl+1-_n):1))+"   frags "+(((frags+killed)<10)?"0":"")+(frags+killed)+"  ||turns "+((turns+_n<20)?"00":((turns+_n<200)?"0":""))+parseInt((turns+_n)/2)+"   score |"+((score>999)?score:((score>99)?"0"+score:((score>9)?"00"+score:"000"+score)))+"  |=>|" + ((_begin) ? "> >||  get ready !!!  ||< <|<" : (tur[pos.indexOf(turn)]) + (tur[pos.indexOf(turn)+1]) + (tur[pos.indexOf(turn)+2]) + (tur[pos.indexOf(turn)+3]))).toUpperCase()+"=", 2);
 		}
 		
 		function writeHistory(_level, _value){//console.log("writeHistory", lvl, _level, _value);
@@ -1587,8 +1599,8 @@
 			}
 		}
 		var kill = createListFunction(function(result, i) {
-			if (result[parentNode]) {
-				result[parentNode].removeChild(result);
+			if (result.parentNode) {
+				result.parentNode.removeChild(result);
 			}
 		})
 		var killAll = function(child) {
@@ -1668,15 +1680,15 @@
 						}, _t);
 					}
 				},
-				victory:function(_n){
+				victory:function(){
 					bb(5, 150, 20, 12); bb(140, 150, 20, 12); bb(280, 150, 20, 12);
-					bb(400, 198, 20, 15); bb(675, 178, 25, 12); bb(780, 198, 50, 20);
+					bb(400, 198, 20, 15); bb(675, 176, 25, 12); bb(780, 198, 50, 20);
 					function bb(_t, _f, _c, _d){
 						setTimeout(function(){
-							playSound(_f, _n||1, _c, _d, 0.02*sound, 2);
-							playSound(_f, _n||1, _c, _d, 0.02*sound, 3);
-							playSound(_f*2, _n||1, _c, _d/2, 0.003*sound);
-							playSound(_f*2, _n||1, _c, _d/2, 0.005*sound, 1);
+							playSound(_f, 0, _c, _d, 0.02*sound, 2);
+							playSound(_f, 0, _c, _d, 0.02*sound, 3);
+							playSound(_f*2, 0, _c, _d/2, 0.003*sound);
+							playSound(_f*2, 0, _c, _d/2, 0.005*sound, 1);
 						}, _t);
 					}
 				},
